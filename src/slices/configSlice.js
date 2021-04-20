@@ -2,8 +2,6 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { capitalize } from '@open-tender/js'
 import { OpenTenderAPI } from '@open-tender/redux'
 
-// for testing
-// const baseUrl = 'http://httpstat.us'
 const baseUrl = process.env.REACT_APP_API_URL
 const authUrl = process.env.REACT_APP_AUTH_URL
 
@@ -19,18 +17,15 @@ const initialState = {
   retries: 0,
 }
 
-// fetch config via origin
+const clientId = process.env.REACT_APP_CLIENT_ID
+const brandId = process.env.REACT_APP_BRAND_ID
 export const fetchConfig = createAsyncThunk(
   'config/getConfig',
   async (_, thunkAPI) => {
     try {
-      const options = { baseUrl, authUrl }
+      const options = { baseUrl, authUrl, clientId, brandId }
       const api = new OpenTenderAPI(options)
-      // for testing
-      // const response = await api.getHttpResponse(503)
       const response = await api.getConfig()
-      const brandId = response.brand.brandId
-      const clientId = response.clientId
       const app = { baseUrl, authUrl, clientId, brandId }
       return { ...response, app }
     } catch (err) {
@@ -38,24 +33,6 @@ export const fetchConfig = createAsyncThunk(
     }
   }
 )
-
-// fetch config via explicit brandId and clientId
-// const clientId = process.env.REACT_APP_CLIENT_ID
-// const brandId = process.env.REACT_APP_BRAND_ID
-// export const fetchConfig = createAsyncThunk(
-//   'config/getConfig',
-//   async (_, thunkAPI) => {
-//     try {
-//       const options = { baseUrl, authUrl, clientId, brandId }
-//       const api = new OpenTenderAPI(options)
-//       const response = await api.getConfig()
-//       const app = { baseUrl, authUrl, clientId, brandId }
-//       return { ...response, app }
-//     } catch (err) {
-//       return thunkAPI.rejectWithValue(err)
-//     }
-//   }
-// )
 
 const configSlice = createSlice({
   name: 'config',
