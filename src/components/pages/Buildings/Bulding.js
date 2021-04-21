@@ -2,16 +2,25 @@ import styled from '@emotion/styled'
 import propTypes from 'prop-types'
 import { useHistory } from 'react-router-dom'
 import { stripTags } from '@open-tender/js'
-import { BgImage, Box, ButtonStyled } from '@open-tender/components'
+import { Box, ButtonStyled } from '@open-tender/components'
 
 import RevenueCenterAction from '../../RevenueCenter/RevenueCenterAction'
 import iconMap from '../../iconMap'
+import { BackgroundImage } from '../..'
+import { useSelector } from 'react-redux'
+import { selectTheme } from '../../../slices'
 
 const BuildingWrapper = styled('div')`
   flex: 1 0 50%;
   min-width: 64rem;
   max-width: 72rem;
   padding: 1.5rem;
+  @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
+    flex: 1 0 100%;
+    max-width: 100%;
+    min-width: 0;
+    padding: 1.5rem 0;
+  }
 `
 
 const BuildingView = styled(Box)`
@@ -23,17 +32,18 @@ const BuildingView = styled(Box)`
   background-color: ${(props) => props.theme.bgColors.secondary};
 `
 
-const BuildingImage = styled(BgImage)`
+const BuildingImage = styled('div')`
   position: absolute;
   top: 0;
   bottom: 0;
   right: 0;
   width: 24rem;
-  background-color: ${(props) => props.theme.bgColors.secondary};
+  display: flex;
+  // background-color: ${(props) => props.theme.bgColors.secondary};
 
-  @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
-    display: none;
-  }
+  // @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
+  //   display: none;
+  // }
 `
 
 const BuildingContent = styled('div')`
@@ -94,33 +104,15 @@ const BuildingActions = styled('div')`
   }
 `
 
-const BuildingDesc = styled('div')`
-  margin: 0.75rem 0 0;
-
-  p {
-    font-size: ${(props) => props.theme.fonts.sizes.small};
-    line-height: ${(props) => props.theme.lineHeight};
-  }
-`
-
 const Building = ({ revenueCenter }) => {
   const history = useHistory()
-  const {
-    name,
-    slug,
-    // description,
-    address,
-    images,
-    hours,
-    is_outpost,
-  } = revenueCenter
+  const { name, slug, address, images, hours, is_outpost } = revenueCenter
   const smallImg = images.find((i) => i.type === 'SMALL_IMAGE')
   const largeImg = images.find((i) => i.type === 'SMALL_IMAGE')
   const imageUrl = smallImg.url || largeImg.url
-  const bgStyle = imageUrl ? { backgroundImage: `url(${imageUrl}` } : null
   const hoursDesc = hours.description ? stripTags(hours.description) : null
   const hoursDescIcon = is_outpost ? iconMap.AlertCircle : iconMap.Clock
-  // const desc = description ? stripTags(description) : null
+  const theme = useSelector(selectTheme)
 
   const onClick = () => {
     history.push(`/locations/${slug}`)
@@ -129,7 +121,12 @@ const Building = ({ revenueCenter }) => {
   return (
     <BuildingWrapper>
       <BuildingView>
-        <BuildingImage style={bgStyle}>&nbsp;</BuildingImage>
+        <BuildingImage>
+          <BackgroundImage
+            imageUrl={imageUrl}
+            loaderColor={theme.bgColors.tertiary}
+          />
+        </BuildingImage>
         <BuildingContent>
           <div>
             <BuildingHeader>
@@ -153,11 +150,6 @@ const Building = ({ revenueCenter }) => {
                   arrow={null}
                 />
               )}
-              {/* {desc && (
-              <BuildingDesc>
-                <p>{desc}</p>
-              </BuildingDesc>
-            )} */}
             </BuildingActions>
           </div>
           <div>

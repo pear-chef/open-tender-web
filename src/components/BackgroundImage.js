@@ -46,6 +46,7 @@ const BackgroundImage = ({
   show_overlay = false,
   overlay_color,
   overlay_opacity,
+  loaderColor = null,
   style = {},
   children,
 }) => {
@@ -60,7 +61,7 @@ const BackgroundImage = ({
   return (
     <BackgroundImageView style={style}>
       {isLoading ? (
-        <BackgroundLoading />
+        <BackgroundLoading color={loaderColor} />
       ) : (
         <>
           <BackgroundImageImage style={bgStyle} />

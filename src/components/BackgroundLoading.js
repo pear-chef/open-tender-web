@@ -18,9 +18,9 @@ const BackgroundLoadingView = styled('div')`
   z-index: ${(props) => props.zIndex || 1};
 `
 
-const BackgroundLoading = ({ zIndex = null }) => {
+const BackgroundLoading = ({ zIndex = null, color = null }) => {
   const theme = useSelector(selectTheme)
-  const loaderColor = theme.bgColors.primary
+  const loaderColor = color || theme.bgColors.primary
 
   return (
     <BackgroundLoadingView zIndex={zIndex}>
