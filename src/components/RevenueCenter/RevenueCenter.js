@@ -10,6 +10,7 @@ import iconMap from '../iconMap'
 import RevenueCenterOrder from './RevenueCenterOrder'
 import RevenueCenterAction from './RevenueCenterAction'
 import { selectDisplaySettings } from '../../slices'
+import { isMobile } from 'react-device-detect'
 
 const RevenueCenterView = styled(Box)`
   position: relative;
@@ -17,6 +18,10 @@ const RevenueCenterView = styled(Box)`
   width: 100%;
   background-color: ${(props) =>
     props.theme.bgColors[props.isMenu ? 'primary' : 'secondary']};
+  ${(props) =>
+    props.isMenu || props.isLanding
+      ? 'box-shadow: 0px 6px 24px 0px rgba(0, 0, 0, 0.3)'
+      : ''};
 `
 
 const RevenueCenterImage = styled(BgImage)`
@@ -150,7 +155,11 @@ const RevenueCenter = ({
       : null
 
   return (
-    <RevenueCenterView style={style} isMenu={isMenu}>
+    <RevenueCenterView
+      style={style}
+      isMenu={isMenu}
+      isLanding={isMobile && isLanding}
+    >
       {showImage && (
         <RevenueCenterImage style={bgStyle}>&nbsp;</RevenueCenterImage>
       )}

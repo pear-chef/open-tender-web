@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { useHistory } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import { isBrowser } from 'react-device-detect'
 import {
   resetOrderType,
@@ -14,12 +14,32 @@ import {
   setAddress,
   selectCartQuantity,
   fetchMenuItems,
+  setServiceType,
 } from '@open-tender/redux'
 import { getLastOrder, makeOrderTypeName } from '@open-tender/js'
 import { ButtonStyled } from '@open-tender/components'
 
 import iconMap from '../../iconMap'
 import { Loading, PageButtons } from '../..'
+import styled from '@emotion/styled'
+
+const AccountActionsView = styled('div')`
+  margin: -2rem auto 0;
+  @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
+    margin: -1rem auto 0;
+  }
+
+  p {
+    line-height: ${(props) => props.theme.lineHeight};
+    @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
+      font-size: ${(props) => props.theme.fonts.sizes.small};
+    }
+  }
+
+  p + p {
+    margin: 2rem 0 0;
+  }
+`
 
 const Continue = ({ size, icon, current, startNew }) => {
   return (
@@ -39,23 +59,92 @@ const Continue = ({ size, icon, current, startNew }) => {
   )
 }
 
-const Reorder = ({ size, icon, orderTypeName, reorder, switchType }) => {
-  return (
-    <>
-      <ButtonStyled icon={icon} onClick={reorder} size={size}>
-        Order {orderTypeName}
-        {isBrowser && ' Again'}
-      </ButtonStyled>
-      <ButtonStyled
-        icon={iconMap.RefreshCw}
-        onClick={switchType}
-        size={size}
-        color="secondary"
-      >
-        Change Order Type
-      </ButtonStyled>
-    </>
-  )
+const LastOrderButtons = ({
+  lastOrder,
+  revenueCenter,
+  buttonSize,
+  reorder,
+  change,
+}) => {
+  const { order_type, service_type } = lastOrder
+  const { service_types } = revenueCenter.settings
+  const orderTypeName = makeOrderTypeName(order_type, service_type)
+  const orderTypeIcon = makeOrderTypeIcon(order_type, service_type)
+  const otherServiceType = service_type === 'DELIVERY' ? 'PICKUP' : 'DELIVERY'
+  const otherTypeName = makeOrderTypeName(order_type, otherServiceType)
+  const otherTypeIcon = makeOrderTypeIcon(order_type, otherServiceType)
+  if (service_types.includes(service_type)) {
+    return (
+      <>
+        <p>
+          You ordered {orderTypeName} from {revenueCenter.name} last time.
+        </p>
+        <PageButtons>
+          <ButtonStyled
+            icon={orderTypeIcon}
+            onClick={() => reorder(service_type, revenueCenter)}
+            size={buttonSize}
+          >
+            Order {orderTypeName}
+            {isBrowser && ' Again'}
+          </ButtonStyled>
+          {service_types.includes(otherServiceType) && (
+            <ButtonStyled
+              icon={otherTypeIcon}
+              onClick={() => reorder(otherServiceType, revenueCenter)}
+              size={buttonSize}
+              color="secondary"
+            >
+              Order {otherTypeName} Instead
+            </ButtonStyled>
+          )}
+        </PageButtons>
+        <p>
+          <Link to="/buildings">Order from a different building.</Link>
+        </p>
+      </>
+    )
+  }
+  if (service_types.includes(otherServiceType)) {
+    return (
+      <>
+        <p>
+          You ordered {orderTypeName} from {revenueCenter.name} last time, but
+          this order type is no longer available.
+        </p>
+        <PageButtons>
+          <ButtonStyled
+            icon={otherTypeIcon}
+            onClick={() => reorder(otherServiceType)}
+            size={buttonSize}
+          >
+            Order {otherTypeName} Instead
+          </ButtonStyled>
+        </PageButtons>
+        <p>
+          <Link to="/buildings">
+            Or start an order from a different building.
+          </Link>
+        </p>
+      </>
+    )
+  } else {
+    return (
+      <>
+        <p>
+          You ordered {orderTypeName} from {revenueCenter.name} last time, but
+          this building is no longer offering {orderTypeName} or {otherTypeName}
+          .
+        </p>
+        <p>
+          {/* <Link to="/buildings">Start an order from a different building.</Link> */}
+          <ButtonStyled onClick={change} size={buttonSize}>
+            Try A Different Building
+          </ButtonStyled>
+        </p>
+      </>
+    )
+  }
 }
 
 const makeOrderTypeIcon = (orderType, serviceType) => {
@@ -116,44 +205,47 @@ const AccountActions = () => {
     history.push(`/order-type`)
   }
 
-  const switchOrderType = () => {
-    dispatch(resetOrderType())
-    history.push(`/order-type`)
-  }
-
   const continueCurrent = () => {
     history.push(revenueCenter ? `/menu/${revenueCenter.slug}` : '/order-type')
   }
 
-  return (
-    <PageButtons>
-      {isLoading ? (
-        <Loading text="Retrieving your account info..." />
-      ) : isCurrentOrder ? (
-        <Continue
-          icon={orderTypeIcon}
-          size={buttonSize}
-          current={continueCurrent}
-          startNew={startNewOrder}
-        />
-      ) : lastOrder ? (
-        <Reorder
-          icon={orderTypeIcon}
-          size={buttonSize}
-          orderTypeName={orderTypeName}
-          reorder={continueCurrent}
-          switchType={switchOrderType}
-        />
-      ) : (
-        <ButtonStyled
-          icon={iconMap.ShoppingBag}
-          onClick={startNewOrder}
-          size={buttonSize}
-        >
-          Start a New Order
-        </ButtonStyled>
-      )}
-    </PageButtons>
+  const change = () => {
+    dispatch(resetOrder())
+    history.push(`/buildings`)
+  }
+
+  const reorder = (serviceType, revenueCenter) => {
+    dispatch(setServiceType(serviceType))
+    history.push(`/menu/${revenueCenter.slug}`)
+  }
+
+  return isLoading ? (
+    <Loading text="Retrieving your account info..." />
+  ) : isCurrentOrder && revenueCenter ? (
+    <Continue
+      icon={orderTypeIcon}
+      size={buttonSize}
+      current={continueCurrent}
+      startNew={startNewOrder}
+    />
+  ) : lastOrder && revenueCenter ? (
+    <AccountActionsView>
+      <LastOrderButtons
+        lastOrder={lastOrder}
+        revenueCenter={revenueCenter}
+        buttonSize={buttonSize}
+        reorder={reorder}
+        change={change}
+      />
+    </AccountActionsView>
+  ) : (
+    <ButtonStyled
+      icon={iconMap.ShoppingBag}
+      onClick={startNewOrder}
+      size={buttonSize}
+    >
+      Start a New Order
+    </ButtonStyled>
   )
 }
 

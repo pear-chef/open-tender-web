@@ -8,7 +8,7 @@ import {
   setOrderServiceType,
   setAddress,
   reorderPastOrder,
-  editOrder,
+  // editOrder,
 } from '@open-tender/redux'
 import {
   makeOrderTypeName,
@@ -155,7 +155,7 @@ const Order = ({ order, loading, error, isConfirmation }) => {
         {isConfirmation ? <h2>{orderTitle}</h2> : <h1>{orderTitle}</h1>}
         {!isMerch && (
           <OrderButtons>
-            {auth && order.is_editable && (
+            {/* {auth && order.is_editable && (
               <ButtonStyled
                 icon={iconMap.Edit}
                 onClick={() => dispatch(editOrder(order))}
@@ -163,7 +163,7 @@ const Order = ({ order, loading, error, isConfirmation }) => {
               >
                 Edit
               </ButtonStyled>
-            )}
+            )} */}
             <ButtonStyled
               icon={iconMap.RefreshCw}
               onClick={handleReorder}

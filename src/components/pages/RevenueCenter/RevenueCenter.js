@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useHistory } from 'react-router-dom'
 import { isBrowser } from 'react-device-detect'
 import { Helmet } from 'react-helmet'
 import {
@@ -8,6 +8,7 @@ import {
   fetchRevenueCenter,
   resetOrderType,
   setOrderServiceType,
+  selectCustomer,
 } from '@open-tender/redux'
 import { useGeolocation } from '@open-tender/components'
 
@@ -24,12 +25,13 @@ import {
   Background,
   Container,
   Content,
-  HeaderDefault,
+  Header,
   Loading,
   Main,
   RevenueCenter as RevenueCenterCard,
   ScreenreaderTitle,
 } from '../..'
+import { Account, Back, Home, Logout } from '../../buttons'
 
 const makeImageUrl = (images, defaultImageUrl) => {
   if (!images) return defaultImageUrl || null
@@ -42,8 +44,10 @@ const makeImageUrl = (images, defaultImageUrl) => {
 
 const RevenueCenter = () => {
   const dispatch = useDispatch()
+  const history = useHistory()
   const [imageUrl, setImageUrl] = useState(null)
   const { slug } = useParams()
+  const { auth } = useSelector(selectCustomer)
   const { geoLatLng, geoError } = useGeolocation()
   const { title: siteTitle } = useSelector(selectBrand)
   const { revenueCenters: config } = useSelector(selectConfig)
@@ -94,11 +98,27 @@ const RevenueCenter = () => {
       </Helmet>
       <Background imageUrl={imageUrl || config.background} />
       <Content maxWidth="76.8rem">
-        <HeaderDefault
+        <Header
           maxWidth="76.8rem"
-          title={isBrowser ? null : config.title}
+          title={!isBrowser ? 'Choose Order Type' : null}
+          left={
+            <Back
+              text="Back to Buildings"
+              onClick={() => history.push('/buildings')}
+            />
+          }
+          right={
+            auth ? (
+              <>
+                {isBrowser && <Home />}
+                <Logout />
+              </>
+            ) : (
+              <Account />
+            )
+          }
         />
-        <Main>
+        <Main imageUrl={!isBrowser && imageUrl ? imageUrl : null}>
           <Container>
             <ScreenreaderTitle>{title}</ScreenreaderTitle>
             <div style={{ margin: '4rem 0 0' }}>

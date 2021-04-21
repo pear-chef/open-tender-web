@@ -49,7 +49,7 @@ const Account = () => {
   const announcements = useSelector(selectAnnouncementsPage('ACCOUNT'))
   const { title: siteTitle } = useSelector(selectBrand)
   const { account: accountConfig } = useSelector(selectConfig)
-  const { background, mobile, title, subtitle, showHero } = accountConfig
+  const { background, mobile, title, showHero } = accountConfig
   const { auth, profile } = useSelector(selectCustomer)
   const pageTitle = profile ? `${title}, ${profile.first_name}` : ''
   const token = auth ? auth.access_token : null
@@ -101,7 +101,7 @@ const Account = () => {
           >
             <Greeting
               title={pageTitle}
-              subtitle={subtitle}
+              // subtitle={subtitle}
               actions={<AccountActions />}
             >
               {/* <AccountLinks /> */}

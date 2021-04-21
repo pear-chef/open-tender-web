@@ -1,17 +1,17 @@
 import React from 'react'
 import propTypes from 'prop-types'
-import { useSelector } from 'react-redux'
-import { useHistory } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
 import styled from '@emotion/styled'
-import { makeRevenueCenterMsg } from '@open-tender/js'
 import {
-  selectOrder,
-  selectGroupOrder,
-  selectAutoSelect,
-} from '@open-tender/redux'
+  makeRevenueCenterMsg,
+  makeReadableDateStrFromIso,
+  timezoneMap,
+  capitalize,
+} from '@open-tender/js'
+import { selectOrder, selectGroupOrder } from '@open-tender/redux'
 import { ButtonStyled, Message, Text } from '@open-tender/components'
 
-import { selectConfig } from '../../slices'
+import { openModal, selectConfig } from '../../slices'
 import iconMap from '../iconMap'
 import RevenueCenterButtons from './RevenueCenterButtons'
 
@@ -55,14 +55,16 @@ const RevenueCenterOrderMessageMessage = styled('p')`
 `
 
 export const RevenueCenterOrder = ({ revenueCenter, isMenu, isLanding }) => {
-  const history = useHistory()
+  const dispatch = useDispatch()
   const { serviceType, requestedAt } = useSelector(selectOrder)
   const { cartId } = useSelector(selectGroupOrder)
-  const hasGroupOrdering =
-    revenueCenter && revenueCenter.settings.group_ordering
-  const autoSelect = useSelector(selectAutoSelect)
   const { revenueCenters: rcConfig } = useSelector(selectConfig)
   const { statusMessages } = rcConfig || {}
+  const hasGroupOrdering =
+    revenueCenter && revenueCenter.settings.group_ordering
+  const tz = revenueCenter ? timezoneMap[revenueCenter.timezone] : null
+  const orderTime =
+    requestedAt && tz ? makeReadableDateStrFromIso(requestedAt, tz) : null
   const msg = makeRevenueCenterMsg(
     revenueCenter,
     serviceType,
@@ -80,6 +82,23 @@ export const RevenueCenterOrder = ({ revenueCenter, isMenu, isLanding }) => {
             </Message>
           </RevenueCenterOrderMessageMessage>
         </RevenueCenterOrderMessage>
+      ) : isMenu ? (
+        <div>
+          {orderTime && (
+            <p style={{ margin: '0 0 2rem' }}>
+              <Text size="small">
+                Your current {serviceType.toLowerCase()} time is {orderTime}
+                {msg.message ? ` and ${msg.message.toLowerCase()}` : ''}.
+              </Text>
+            </p>
+          )}
+          <ButtonStyled
+            icon={iconMap.RefreshCw}
+            onClick={() => dispatch(openModal({ type: 'requestedAt' }))}
+          >
+            Change {capitalize(serviceType)} Time
+          </ButtonStyled>
+        </div>
       ) : (
         <>
           {msg.message && (
@@ -95,25 +114,12 @@ export const RevenueCenterOrder = ({ revenueCenter, isMenu, isLanding }) => {
               </p>
             </RevenueCenterOrderMessage>
           )}
-          {isMenu ? (
-            !autoSelect ? (
-              <div>
-                <ButtonStyled
-                  icon={iconMap.RefreshCw}
-                  onClick={() => history.push(`/locations`)}
-                >
-                  Change Location
-                </ButtonStyled>
-              </div>
-            ) : null
-          ) : (
-            <div>
-              <RevenueCenterButtons
-                revenueCenter={revenueCenter}
-                isLanding={isLanding}
-              />
-            </div>
-          )}
+          <div>
+            <RevenueCenterButtons
+              revenueCenter={revenueCenter}
+              isLanding={isLanding}
+            />
+          </div>
         </>
       )}
     </RevenueCenterOrderView>

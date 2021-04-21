@@ -11,6 +11,7 @@ import GroupOrder from './GroupOrder'
 import Home from './Home'
 import LeaveGroup from './LeaveGroup'
 import Locations from './Locations'
+import Login from './Login'
 import Logout from './Logout'
 import Menu from './Menu'
 import NavMenu from './NavMenu'
@@ -35,6 +36,7 @@ export {
   Home,
   LeaveGroup,
   Locations,
+  Login,
   Logout,
   Menu,
   NavMenu,

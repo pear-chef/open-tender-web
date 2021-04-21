@@ -6,9 +6,9 @@ const PageButtons = styled('div')`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: -2rem 0 0;
+  margin: 1.5rem 0;
   @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
-    margin: -1rem -1rem 0;
+    margin: 0 -1rem 0;
     flex-wrap: wrap;
   }
 

@@ -1,12 +1,17 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 // import { TransitionGroup, CSSTransition } from 'react-transition-group'
 import styled from '@emotion/styled'
 import Helmet from 'react-helmet'
 import { isBrowser } from 'react-device-detect'
-import { fetchRevenueCenters, selectRevenueCenters } from '@open-tender/redux'
+import {
+  fetchRevenueCenters,
+  selectRevenueCenters,
+  selectCustomer,
+} from '@open-tender/redux'
 import { useGeolocation } from '@open-tender/components'
 
+import { maybeRefreshVersion } from '../../../app/version'
 import {
   selectBrand,
   selectConfig,
@@ -14,8 +19,9 @@ import {
   setGeoLatLng,
   setGeoError,
   setGeoLoading,
+  closeModal,
 } from '../../../slices'
-import { Account, Deals as DealsButton } from '../../buttons'
+import { Account, Deals as DealsButton, Login } from '../../buttons'
 import {
   BackgroundImage,
   Content,
@@ -28,6 +34,8 @@ import {
 } from '../..'
 import Building from './Bulding'
 import BuildingsInput from './BuildingsInput'
+import { useHistory } from 'react-router-dom'
+import { AppContext } from '../../../App'
 
 const BuildingsView = styled('div')`
   display: flex;
@@ -115,22 +123,27 @@ const checkMatch = (value, revenueCenter) => {
 
 const Buildings = () => {
   const dispatch = useDispatch()
+  const history = useHistory()
   const [value, setValue] = useState('')
   const [open, setOpen] = useState(null)
   const [filtered, setFiltered] = useState(null)
+  const { windowRef } = useContext(AppContext)
   const theme = useSelector(selectTheme)
   const brand = useSelector(selectBrand)
+  const { auth } = useSelector(selectCustomer)
   const { revenueCenters: config } = useSelector(selectConfig)
   const { title, subtitle, background } = config
   const { has_deals } = brand
   const { revenueCenters, loading } = useSelector(selectRevenueCenters)
   const { geoLatLng, geoError } = useGeolocation()
   const noMatches = value && filtered && filtered.length === 0
-  const matching = useMemo(
-    () => (open ? open.filter((i) => checkMatch(value, i)) : null),
-    [open, value]
-  )
   const displayed = filtered || open || []
+
+  useEffect(() => {
+    windowRef.current.scrollTop = 0
+    maybeRefreshVersion()
+    dispatch(closeModal())
+  }, [windowRef, dispatch])
 
   useEffect(() => {
     dispatch(fetchRevenueCenters({ type: 'OLO' }))
@@ -144,30 +157,17 @@ const Buildings = () => {
     }
   }, [loading, revenueCenters, open, setOpen])
 
-  // useEffect(() => {
-  //   if (value) {
-  //     setFiltered([])
-  //     setTimeout(() => {
-  //       const matching = open.filter((i) => checkMatch(value, i))
-  //       setFiltered(matching)
-  //     }, 250)
-  //     // const matching = open.filter((i) => checkMatch(value, i))
-  //     // setFiltered(matching)
-  //   } else {
-  //     setFiltered(null)
-  //   }
-  // }, [value, open, setFiltered])
-
   useEffect(() => {
-    if (matching) {
+    if (value) {
       setFiltered([])
       setTimeout(() => {
+        const matching = open.filter((i) => checkMatch(value, i))
         setFiltered(matching)
       }, 250)
     } else {
       setFiltered(null)
     }
-  }, [matching])
+  }, [value, open, setFiltered])
 
   useEffect(() => {
     dispatch(setGeoLoading())
@@ -181,6 +181,8 @@ const Buildings = () => {
     }
   }, [geoLatLng, geoError, dispatch])
 
+  const callback = () => history.push('/')
+
   return (
     <>
       <Helmet>
@@ -192,7 +194,7 @@ const Buildings = () => {
           right={
             <>
               {isBrowser && has_deals && <DealsButton />}
-              <Account />
+              {auth ? <Account /> : <Login callback={callback} />}
             </>
           }
         />
@@ -202,6 +204,7 @@ const Buildings = () => {
               <BackgroundImage
                 imageUrl={background}
                 loaderColor={theme.bgColors.tertiary}
+                bgColor={theme.bgColors.dark}
               />
             </BuildingsHeroImage>
             <BuildingsHeroContent>

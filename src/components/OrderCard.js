@@ -6,7 +6,7 @@ import {
   setOrderServiceType,
   setAddress,
   reorderPastOrder,
-  editOrder,
+  // editOrder,
 } from '@open-tender/redux'
 import {
   timezoneMap,
@@ -88,7 +88,7 @@ const OrderCard = ({ order, isLast }) => {
       }
       footer={
         <>
-          {order.is_editable && (
+          {/* {order.is_editable && (
             <ButtonStyled
               icon={iconMap.Edit}
               onClick={() => dispatch(editOrder(order))}
@@ -96,13 +96,13 @@ const OrderCard = ({ order, isLast }) => {
             >
               Edit
             </ButtonStyled>
-          )}
+          )} */}
           {!isMerch && (
             <ButtonStyled
               icon={iconMap.RefreshCw}
               onClick={handleReorder}
               size="small"
-              color={order.is_editable ? 'secondary' : 'primary'}
+              color="primary"
             >
               Reorder
             </ButtonStyled>

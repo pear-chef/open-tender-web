@@ -2,11 +2,7 @@ import React from 'react'
 import propTypes from 'prop-types'
 import { useSelector, useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import {
-  // isoToDate,
-  makeReadableDateStrFromIso,
-  // minutesLeft,
-} from '@open-tender/js'
+import { makeReadableDateStrFromIso } from '@open-tender/js'
 import {
   selectGroupOrder,
   selectTimezone,

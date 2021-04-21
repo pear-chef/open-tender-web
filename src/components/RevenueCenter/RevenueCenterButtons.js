@@ -6,7 +6,6 @@ import {
   selectServiceType,
   setOrderServiceType,
   setAddress,
-  resetRevenueCenter,
   setRevenueCenter,
 } from '@open-tender/redux'
 import { ButtonStyled } from '@open-tender/components'
@@ -45,21 +44,16 @@ export const RevenueCenterButtons = ({ revenueCenter, isLanding }) => {
 
   const handlePickup = () => {
     dispatch(setOrderServiceType(rcType, 'PICKUP', isOutpost))
-    if (isOutpost) dispatch(setAddress(address))
+    dispatch(setAddress(address))
     dispatch(setRevenueCenter(revenueCenter))
     history.push(menuSlug)
   }
 
   const handleDelivery = () => {
     dispatch(setOrderServiceType(rcType, 'DELIVERY', isOutpost))
-    if (isLanding) {
-      dispatch(resetRevenueCenter())
-      history.push('/locations')
-    } else {
-      if (isOutpost) dispatch(setAddress(address))
-      dispatch(setRevenueCenter(revenueCenter))
-      history.push(menuSlug)
-    }
+    dispatch(setAddress(address))
+    dispatch(setRevenueCenter(revenueCenter))
+    history.push(menuSlug)
   }
 
   return (
@@ -79,7 +73,7 @@ export const RevenueCenterButtons = ({ revenueCenter, isLanding }) => {
           icon={iconMap.ShoppingBag}
           onClick={handlePickup}
         >
-          Order {hasDelivery ? 'Pickup' : 'Here'}
+          Leave In The Lobby
         </ButtonStyled>
       )}
       {hasDelivery && (
@@ -88,7 +82,7 @@ export const RevenueCenterButtons = ({ revenueCenter, isLanding }) => {
           icon={iconMap.Truck}
           onClick={handleDelivery}
         >
-          Order Delivery
+          Deliver To My Unit
         </ButtonStyled>
       )}
     </>
