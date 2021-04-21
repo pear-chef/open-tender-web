@@ -467,6 +467,31 @@ const makeGlobalStyles = (theme) => css`
     transform: translateY(0);
   }
 
+  .fade-scale-enter {
+    transform: scale(0);
+    max-height: 0;
+    opacity: 0;
+  }
+
+  .fade-scale-enter-active {
+    transform: scale(1);
+    max-height: 40rem;
+    opacity: 1;
+    transition: all 500ms;
+  }
+
+  .fade-scale-exit {
+    transform: scale(1);
+    max-height: 40rem;
+    opacity: 1;
+  }
+
+  .fade-scale-exit-active {
+    transform: scale(0);
+    opacity: 0;
+    transition: all 500ms;
+  }
+
   .react-datepicker__current-month {
     font-family: ${theme.fonts.preface.family};
     font-weight: ${theme.fonts.preface.weight};

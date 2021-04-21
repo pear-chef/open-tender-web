@@ -29,7 +29,8 @@ const Label = styled('label')`
 
 const LabelInput = styled('input')`
   padding-left: 5rem;
-  // background-color: ${(props) => props.theme.bgColors.secondary};
+  background-color: ${(props) => props.theme.bgColors.primary};
+  box-shadow: none;
 
   &::placeholder {
     color: ${(props) => props.theme.colors.primary};
@@ -108,7 +109,7 @@ const BuildingsInput = ({ value, setValue }) => {
           type="text"
           value={text}
           onChange={handleChange}
-          placeholder="enter building name or address"
+          placeholder="enter building name, address, or zip code"
         />
         {text && (
           <LabelClear>

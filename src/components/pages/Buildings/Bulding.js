@@ -15,6 +15,8 @@ const BuildingWrapper = styled('div')`
   min-width: 64rem;
   max-width: 72rem;
   padding: 0 1.5rem 3rem;
+  opacity: 0;
+  animation: slide-up 0.25s ease-in-out 0s forwards;
   @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
     flex: 1 0 100%;
     max-width: 100%;
@@ -102,15 +104,33 @@ const BuildingActions = styled('div')`
   }
 `
 
+const BuildingFooter = styled('div')`
+  button:disabled {
+    background-color: ${(props) => props.theme.bgColors.dark};
+    opacity: 1;
+  }
+`
+
 const Building = ({ revenueCenter }) => {
   const history = useHistory()
-  const { name, slug, address, images, hours, is_outpost } = revenueCenter
+  const theme = useSelector(selectTheme)
+  const {
+    name,
+    slug,
+    address,
+    images,
+    hours,
+    is_outpost,
+    status,
+  } = revenueCenter
   const smallImg = images.find((i) => i.type === 'SMALL_IMAGE')
   const largeImg = images.find((i) => i.type === 'SMALL_IMAGE')
   const imageUrl = smallImg.url || largeImg.url
   const hoursDesc = hours.description ? stripTags(hours.description) : null
   const hoursDescIcon = is_outpost ? iconMap.AlertCircle : iconMap.Clock
-  const theme = useSelector(selectTheme)
+  const isComingSoon = status === 'COMING_SOON'
+  const { street, city, postal_code, state } = address
+  const fullAddress = `${street}, ${city}, ${state} ${postal_code}`
 
   const onClick = () => {
     history.push(`/locations/${slug}`)
@@ -138,7 +158,8 @@ const Building = ({ revenueCenter }) => {
               >
                 <RevenueCenterAction
                   icon={iconMap.MapPin}
-                  text={address.street}
+                  // text={address.street}
+                  text={fullAddress}
                 />
               </a>
               {hoursDesc && (
@@ -150,9 +171,11 @@ const Building = ({ revenueCenter }) => {
               )}
             </BuildingActions>
           </div>
-          <div>
-            <ButtonStyled onClick={onClick}>Order Here</ButtonStyled>
-          </div>
+          <BuildingFooter>
+            <ButtonStyled onClick={onClick} disabled={isComingSoon}>
+              {isComingSoon ? 'Coming Soon!' : 'Order Here'}
+            </ButtonStyled>
+          </BuildingFooter>
         </BuildingContent>
       </BuildingView>
     </BuildingWrapper>

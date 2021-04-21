@@ -1,11 +1,20 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+// import { TransitionGroup, CSSTransition } from 'react-transition-group'
 import styled from '@emotion/styled'
 import Helmet from 'react-helmet'
 import { isBrowser } from 'react-device-detect'
 import { fetchRevenueCenters, selectRevenueCenters } from '@open-tender/redux'
+import { useGeolocation } from '@open-tender/components'
 
-import { selectBrand, selectConfig, selectTheme } from '../../../slices'
+import {
+  selectBrand,
+  selectConfig,
+  selectTheme,
+  setGeoLatLng,
+  setGeoError,
+  setGeoLoading,
+} from '../../../slices'
 import { Account, Deals as DealsButton } from '../../buttons'
 import {
   BackgroundImage,
@@ -59,7 +68,7 @@ const BuildingsHeroContent = styled('div')`
   position: relative;
   z-index: 2;
   width: 100%;
-  max-width: 64rem;
+  max-width: 72rem;
 `
 
 const BuildingsHeroHeader = styled('div')`
@@ -94,14 +103,20 @@ const checkMatch = (value, revenueCenter) => {
   let { name, address } = revenueCenter
   name = name.toLowerCase()
   let street = address ? address.street || '' : ''
+  let postal_code = address ? address.postal_code || '' : ''
   street = street ? street.toLowerCase() : ''
   const lower = value.toLowerCase()
-  return name.includes(lower) || street.includes(lower)
+  return (
+    name.includes(lower) ||
+    street.includes(lower) ||
+    postal_code.includes(lower)
+  )
 }
 
 const Buildings = () => {
   const dispatch = useDispatch()
   const [value, setValue] = useState('')
+  const [open, setOpen] = useState(null)
   const [filtered, setFiltered] = useState(null)
   const theme = useSelector(selectTheme)
   const brand = useSelector(selectBrand)
@@ -109,27 +124,62 @@ const Buildings = () => {
   const { title, subtitle, background } = config
   const { has_deals } = brand
   const { revenueCenters, loading } = useSelector(selectRevenueCenters)
-  const displayed = filtered || revenueCenters || []
-  // console.log(filtered)
+  const { geoLatLng, geoError } = useGeolocation()
+  const noMatches = value && filtered && filtered.length === 0
+  const matching = useMemo(
+    () => (open ? open.filter((i) => checkMatch(value, i)) : null),
+    [open, value]
+  )
+  const displayed = filtered || open || []
 
   useEffect(() => {
     dispatch(fetchRevenueCenters({ type: 'OLO' }))
   }, [dispatch])
 
+  useEffect(() => {
+    if (loading === 'idle' && !open) {
+      const exclude = ['CLOSED', 'HIDDEN']
+      const openRcs = revenueCenters.filter((i) => !exclude.includes(i.status))
+      setOpen(openRcs)
+    }
+  }, [loading, revenueCenters, open, setOpen])
+
   // useEffect(() => {
-  //   if (loading === 'idle' && !filtered) {
-  //     setFiltered(revenueCenters)
+  //   if (value) {
+  //     setFiltered([])
+  //     setTimeout(() => {
+  //       const matching = open.filter((i) => checkMatch(value, i))
+  //       setFiltered(matching)
+  //     }, 250)
+  //     // const matching = open.filter((i) => checkMatch(value, i))
+  //     // setFiltered(matching)
+  //   } else {
+  //     setFiltered(null)
   //   }
-  // }, [loading, revenueCenters, filtered, setFiltered])
+  // }, [value, open, setFiltered])
 
   useEffect(() => {
-    if (value) {
-      const matching = revenueCenters.filter((i) => checkMatch(value, i))
-      setFiltered(matching)
+    if (matching) {
+      setFiltered([])
+      setTimeout(() => {
+        setFiltered(matching)
+      }, 250)
     } else {
       setFiltered(null)
     }
-  }, [value, revenueCenters, setFiltered])
+  }, [matching])
+
+  useEffect(() => {
+    dispatch(setGeoLoading())
+  }, [dispatch])
+
+  useEffect(() => {
+    if (geoLatLng) {
+      dispatch(setGeoLatLng(geoLatLng))
+    } else if (geoError) {
+      dispatch(setGeoError(geoError))
+    }
+  }, [geoLatLng, geoError, dispatch])
 
   return (
     <>
@@ -162,24 +212,36 @@ const Buildings = () => {
               <BuildingsInput value={value} setValue={setValue} />
             </BuildingsHeroContent>
           </BuildingsHero>
-          <PageContainer style={{ maxWidth: '100%' }}>
-            {/* <PageTitle {...config}>
-              <BuildingsInput value={value} setValue={setValue} />
-            </PageTitle> */}
-            {displayed.length > 0 ? (
-              <BuildingsView>
-                {displayed.map((revenueCenter) => (
-                  <Building
-                    key={revenueCenter.revenue_center_id}
-                    revenueCenter={revenueCenter}
-                  />
-                ))}
-              </BuildingsView>
-            ) : loading === 'pending' ? (
+          <PageContainer style={{ maxWidth: '140rem', minHeight: '136rem' }}>
+            {!open && loading === 'pending' ? (
               <PageContent>
                 <Loading text="Retrieving nearest locations..." />
               </PageContent>
             ) : null}
+            {noMatches ? (
+              <PageContent>
+                <p>There are no buildings matching your search.</p>
+              </PageContent>
+            ) : null}
+            <BuildingsView>
+              {/* <TransitionGroup component={null}>
+                {displayed.map((revenueCenter) => (
+                  <CSSTransition
+                    key={revenueCenter.revenue_center_id}
+                    classNames="fade-scale"
+                    timeout={500}
+                  >
+                    <Building revenueCenter={revenueCenter} />
+                  </CSSTransition>
+                ))}
+              </TransitionGroup> */}
+              {displayed.map((revenueCenter) => (
+                <Building
+                  key={revenueCenter.revenue_center_id}
+                  revenueCenter={revenueCenter}
+                />
+              ))}
+            </BuildingsView>
           </PageContainer>
         </Main>
       </Content>
