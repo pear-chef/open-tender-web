@@ -1,7 +1,7 @@
 import React from 'react'
 import { useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { resetOrderType, selectOrder } from '@open-tender/redux'
+import { selectOrder } from '@open-tender/redux'
 import { serviceTypeNamesMap } from '@open-tender/js'
 import { ButtonStyled } from '@open-tender/components'
 
@@ -11,13 +11,12 @@ import { ModalContent, ModalView } from '..'
 const OrderType = () => {
   const dispatch = useDispatch()
   const history = useHistory()
-  const { serviceType } = useSelector(selectOrder)
+  const { serviceType, revenueCenter } = useSelector(selectOrder)
   const serviceTypeName = serviceTypeNamesMap[serviceType]
 
   const changeOrderType = () => {
-    dispatch(resetOrderType())
     dispatch(closeModal())
-    history.push(`/order-type`)
+    history.push(revenueCenter ? `/locations/${revenueCenter.slug}` : '/')
   }
 
   const cancel = () => {

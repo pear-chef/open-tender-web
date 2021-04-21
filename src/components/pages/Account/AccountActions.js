@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo } from 'react'
+import propTypes from 'prop-types'
 import { useSelector, useDispatch } from 'react-redux'
 import { Link, useHistory } from 'react-router-dom'
 import { isBrowser } from 'react-device-detect'
@@ -12,12 +13,11 @@ import {
   fetchRevenueCenter,
   setOrderServiceType,
   setAddress,
-  selectCartQuantity,
   fetchMenuItems,
   setServiceType,
 } from '@open-tender/redux'
 import { getLastOrder, makeOrderTypeName } from '@open-tender/js'
-import { ButtonStyled } from '@open-tender/components'
+import { ButtonStyled, ButtonLink } from '@open-tender/components'
 
 import iconMap from '../../iconMap'
 import { Loading, PageButtons } from '../..'
@@ -41,22 +41,71 @@ const AccountActionsView = styled('div')`
   }
 `
 
-const Continue = ({ size, icon, current, startNew }) => {
+const ContinueButtons = ({
+  currentOrder,
+  revenueCenter,
+  buttonSize,
+  continueCurrent,
+  changeOrderType,
+  // startNew,
+  change,
+}) => {
+  const { orderType, serviceType } = currentOrder
+  const { service_types } = revenueCenter.settings
+  const orderTypeName = makeOrderTypeName(orderType, serviceType)
+  const orderTypeIcon = makeOrderTypeIcon(orderType, serviceType)
+  const otherServiceType = serviceType === 'DELIVERY' ? 'PICKUP' : 'DELIVERY'
+  const otherTypeName = makeOrderTypeName(orderType, otherServiceType)
+  const otherTypeIcon = makeOrderTypeIcon(orderType, otherServiceType)
   return (
     <>
-      <ButtonStyled icon={icon} onClick={current} size={size}>
-        Continue Order
-      </ButtonStyled>
-      <ButtonStyled
-        icon={iconMap.RefreshCw}
-        onClick={startNew}
-        size={size}
-        color="secondary"
-      >
-        New Order
-      </ButtonStyled>
+      <p>
+        You're currently ordering {orderTypeName} from {revenueCenter.name}.
+      </p>
+      <PageButtons>
+        <ButtonStyled
+          icon={orderTypeIcon}
+          onClick={continueCurrent}
+          size={buttonSize}
+        >
+          Continue {orderTypeName} Order
+        </ButtonStyled>
+        {service_types.includes(otherServiceType) && (
+          <ButtonStyled
+            icon={otherTypeIcon}
+            onClick={() => changeOrderType(otherServiceType, revenueCenter)}
+            size={buttonSize}
+            color="secondary"
+          >
+            Order {otherTypeName} Instead
+          </ButtonStyled>
+        )}
+        {/* <ButtonStyled
+          icon={iconMap.RefreshCw}
+          onClick={startNew}
+          size={buttonSize}
+          color="secondary"
+        >
+          {isBrowser && 'Start A '}New Order
+        </ButtonStyled> */}
+      </PageButtons>
+      <p>
+        <ButtonLink onClick={change}>
+          Order from a different building.
+        </ButtonLink>
+      </p>
     </>
   )
+}
+
+ContinueButtons.displayName = 'ContinueButtons'
+ContinueButtons.propTypes = {
+  currentOrder: propTypes.object,
+  revenueCenter: propTypes.object,
+  buttonSize: propTypes.string,
+  continueCurrent: propTypes.func,
+  changeOrderType: propTypes.func,
+  change: propTypes.func,
 }
 
 const LastOrderButtons = ({
@@ -147,6 +196,15 @@ const LastOrderButtons = ({
   }
 }
 
+LastOrderButtons.displayName = 'LastOrderButtons'
+LastOrderButtons.propTypes = {
+  lastOrder: propTypes.object,
+  revenueCenter: propTypes.object,
+  buttonSize: propTypes.string,
+  reorder: propTypes.func,
+  change: propTypes.func,
+}
+
 const makeOrderTypeIcon = (orderType, serviceType) => {
   return orderType === 'CATERING'
     ? iconMap.Users
@@ -159,22 +217,12 @@ const AccountActions = () => {
   const history = useHistory()
   const dispatch = useDispatch()
   const currentOrder = useSelector(selectOrder)
-  const { revenueCenter, orderType, serviceType, cart } = currentOrder
+  const { revenueCenter, serviceType, cart } = currentOrder
   const { entities: orders, loading } = useSelector(selectCustomerOrders)
-  const cartQuantity = useSelector(selectCartQuantity)
   const isCurrentOrder = revenueCenter && serviceType && cart.length > 0
   const lastOrder = useMemo(() => getLastOrder(orders), [orders])
-  let orderTypeName = null
-  let orderTypeIcon = iconMap.ShoppingBag
-  if (isCurrentOrder) {
-    orderTypeIcon = makeOrderTypeIcon(orderType, serviceType)
-  } else if (lastOrder) {
-    const { order_type, service_type } = lastOrder
-    orderTypeName = makeOrderTypeName(order_type, service_type)
-    orderTypeIcon = makeOrderTypeIcon(order_type, service_type)
-  }
   const reloadLast = lastOrder && !isCurrentOrder
-  const isLoading = loading === 'pending' && !isCurrentOrder && !lastOrder
+  const isLoading = loading === 'pending' && !isCurrentOrder
   const buttonSize = isBrowser ? 'default' : 'small'
 
   useEffect(() => {
@@ -191,27 +239,20 @@ const AccountActions = () => {
         address,
       } = lastOrder
       const { revenue_center_id: revenueCenterId, is_outpost } = revenue_center
-      if (!cartQuantity) {
-        dispatch(fetchRevenueCenter(revenueCenterId))
-        dispatch(setOrderServiceType(order_type, serviceType, is_outpost))
-        dispatch(setAddress(address || null))
-      }
+      dispatch(fetchRevenueCenter(revenueCenterId))
+      dispatch(setOrderServiceType(order_type, serviceType, is_outpost))
+      dispatch(setAddress(address || null))
       dispatch(fetchMenuItems({ revenueCenterId, serviceType }))
     }
-  }, [reloadLast, lastOrder, cartQuantity, dispatch])
+  }, [reloadLast, lastOrder, dispatch])
 
-  const startNewOrder = () => {
-    dispatch(resetOrder())
-    history.push(`/order-type`)
+  const startNew = () => {
+    dispatch(resetOrderType())
+    history.push(`/locations/${revenueCenter.slug}`)
   }
 
   const continueCurrent = () => {
-    history.push(revenueCenter ? `/menu/${revenueCenter.slug}` : '/order-type')
-  }
-
-  const change = () => {
-    dispatch(resetOrder())
-    history.push(`/buildings`)
+    history.push(`/menu/${revenueCenter.slug}`)
   }
 
   const reorder = (serviceType, revenueCenter) => {
@@ -219,15 +260,25 @@ const AccountActions = () => {
     history.push(`/menu/${revenueCenter.slug}`)
   }
 
+  const change = () => {
+    dispatch(resetOrder())
+    history.push(`/buildings`)
+  }
+
   return isLoading ? (
     <Loading text="Retrieving your account info..." />
-  ) : isCurrentOrder && revenueCenter ? (
-    <Continue
-      icon={orderTypeIcon}
-      size={buttonSize}
-      current={continueCurrent}
-      startNew={startNewOrder}
-    />
+  ) : isCurrentOrder ? (
+    <AccountActionsView>
+      <ContinueButtons
+        currentOrder={currentOrder}
+        revenueCenter={revenueCenter}
+        buttonSize={buttonSize}
+        continueCurrent={continueCurrent}
+        startNew={startNew}
+        changeOrderType={reorder}
+        change={change}
+      />
+    </AccountActionsView>
   ) : lastOrder && revenueCenter ? (
     <AccountActionsView>
       <LastOrderButtons
@@ -239,11 +290,7 @@ const AccountActions = () => {
       />
     </AccountActionsView>
   ) : (
-    <ButtonStyled
-      icon={iconMap.ShoppingBag}
-      onClick={startNewOrder}
-      size={buttonSize}
-    >
+    <ButtonStyled icon={iconMap.ShoppingBag} onClick={change} size={buttonSize}>
       Start a New Order
     </ButtonStyled>
   )

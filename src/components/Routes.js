@@ -1,6 +1,5 @@
 import React from 'react'
 import { Switch, Route, Redirect } from 'react-router-dom'
-// import { TransitionGroup, CSSTransition } from 'react-transition-group'
 import {
   Accessibility,
   AccountAddresses,
@@ -27,12 +26,12 @@ import {
   NotFound,
   Order,
   Orders,
-  OrderType,
+  // OrderType,
   Profile,
   Rating,
   Refunds,
   ResetPassword,
-  RevenueCenters,
+  // RevenueCenters,
   RevenueCenter,
   Rewards,
   SignUp,
@@ -41,15 +40,7 @@ import {
   MenuItem,
 } from './pages'
 
-// <TransitionGroup component={null}>
-//   <CSSTransition timeout={10000} classNames="fade" key={location.key}>
-//     <Switch location={location}>
-//     </Switch>
-//   </CSSTransition>
-// </TransitionGroup>
-
 const Routes = () => {
-  // const location = useLocation()
   return (
     <Switch>
       <Route exact path="/">
@@ -71,7 +62,8 @@ const Routes = () => {
         <Thanx />
       </Route>
       <Route exact path="/order-type">
-        <OrderType />
+        {/* <OrderType /> */}
+        <Redirect to="/" />
       </Route>
       <Route exact path="/signup">
         <SignUp />
@@ -89,7 +81,8 @@ const Routes = () => {
         <Buildings />
       </Route>
       <Route exact path="/locations">
-        <RevenueCenters />
+        {/* <RevenueCenters /> */}
+        <Redirect to="/buildings" />
       </Route>
       <Route exact path="/locations/:slug">
         <RevenueCenter />

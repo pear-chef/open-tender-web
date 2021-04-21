@@ -58,9 +58,10 @@ const OrderNow = ({
   // const { auth } = useSelector(selectCustomer)
   const currentOrder = useSelector(selectOrder)
   const { revenueCenter, serviceType, cart } = currentOrder
+  const isCurrentOrder = revenueCenter && serviceType && cart.length > 0
   const { entities: orders } = useSelector(selectCustomerOrders)
   const lastOrder = useMemo(() => getLastOrder(orders), [orders])
-  const isCurrentOrder = revenueCenter && serviceType && cart.length > 0
+
   const cartQuantity = useSelector(selectCartQuantity)
   const showMenu = revenueCenter && (lastOrder || isCurrentOrder)
 

@@ -8,6 +8,7 @@ import {
   fetchRevenueCenters,
   selectRevenueCenters,
   selectCustomer,
+  selectOrder,
 } from '@open-tender/redux'
 import { useGeolocation } from '@open-tender/components'
 
@@ -21,7 +22,7 @@ import {
   setGeoLoading,
   closeModal,
 } from '../../../slices'
-import { Account, Deals as DealsButton, Login } from '../../buttons'
+import { Account, Deals as DealsButton, Login, OrderNow } from '../../buttons'
 import {
   BackgroundImage,
   Content,
@@ -131,6 +132,9 @@ const Buildings = () => {
   const theme = useSelector(selectTheme)
   const brand = useSelector(selectBrand)
   const { auth } = useSelector(selectCustomer)
+  const currentOrder = useSelector(selectOrder)
+  const { revenueCenter, serviceType, cart } = currentOrder
+  const isCurrentOrder = revenueCenter && serviceType && cart.length > 0
   const { revenueCenters: config } = useSelector(selectConfig)
   const { title, subtitle, background } = config
   const { has_deals } = brand
@@ -138,6 +142,9 @@ const Buildings = () => {
   const { geoLatLng, geoError } = useGeolocation()
   const noMatches = value && filtered && filtered.length === 0
   const displayed = filtered || open || []
+  console.log('filtered', filtered)
+  console.log('open', open)
+  console.log('displayed', displayed)
 
   useEffect(() => {
     windowRef.current.scrollTop = 0
@@ -150,7 +157,7 @@ const Buildings = () => {
   }, [dispatch])
 
   useEffect(() => {
-    if (loading === 'idle' && !open) {
+    if (loading === 'idle' && (!open || open.length === 0)) {
       const exclude = ['CLOSED', 'HIDDEN']
       const openRcs = revenueCenters.filter((i) => !exclude.includes(i.status))
       setOpen(openRcs)
@@ -195,6 +202,7 @@ const Buildings = () => {
             <>
               {isBrowser && has_deals && <DealsButton />}
               {auth ? <Account /> : <Login callback={callback} />}
+              {isCurrentOrder && <OrderNow />}
             </>
           }
         />

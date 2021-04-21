@@ -313,7 +313,7 @@ const MenuItem = ({ item }) => {
   return (
     <MenuItemView>
       <MenuItemContainer>
-        {!isIncomplete && (
+        {!isIncomplete && !isSoldOut && (
           <MenuItemAdd onClick={add} disabled={isIncomplete}>
             <Plus size={16} />
           </MenuItemAdd>
