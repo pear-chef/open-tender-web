@@ -5,9 +5,11 @@ import { useGeolocation } from '@open-tender/components'
 
 import { Account, Guest } from '..'
 import { setGeoLatLng, setGeoError, setGeoLoading } from '../../../slices'
+import { useHistory } from 'react-router-dom'
 
 const Home = () => {
   const dispatch = useDispatch()
+  const history = useHistory()
   const { auth } = useSelector(selectCustomer)
   const { geoLatLng, geoError } = useGeolocation()
 
@@ -22,6 +24,10 @@ const Home = () => {
       dispatch(setGeoError(geoError))
     }
   }, [geoLatLng, geoError, dispatch])
+
+  useEffect(() => {
+    if (!auth) return history.push('/buildings')
+  }, [auth, history])
 
   return auth ? <Account /> : <Guest />
 }

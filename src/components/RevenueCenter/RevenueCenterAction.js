@@ -6,7 +6,7 @@ import iconMap from '../iconMap'
 
 const RevenueCenterActionView = styled('div')`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   margin: 0.75rem 0 0;
 `
 
@@ -16,6 +16,7 @@ const RevenueCenterActionIcon = styled('div')`
   width: 1.4rem;
   height: 1.5rem;
   line-height: 0;
+  padding: 0.1rem 0 0;
   color: ${(props) => props.theme.fonts.body.color};
 `
 

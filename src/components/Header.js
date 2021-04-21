@@ -19,7 +19,7 @@ const HeaderView = styled('div')`
   transition: all 0.25s ease;
   background-color: ${(props) => props.theme.bgColors[props.bgColor]};
   box-shadow: ${(props) =>
-    props.stuck ? props.theme.boxShadow.outer : 'none'};
+    props.stuck ? '0px 2px 24px 0px rgba(0, 0, 0, 0.09)' : 'none'};
   border: 0;
   border-bottom-width: 0.1rem;
   border-style: solid;
