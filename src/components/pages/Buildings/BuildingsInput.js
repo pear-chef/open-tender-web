@@ -3,15 +3,22 @@ import debounce from 'lodash/debounce'
 import styled from '@emotion/styled'
 import propTypes from 'prop-types'
 import { Search, XCircle } from 'react-feather'
-import { Box, ButtonIcon } from '@open-tender/components'
+import { ButtonIcon } from '@open-tender/components'
 import { useSelector } from 'react-redux'
 import { selectTheme } from '../../../slices'
 
-const LabelView = styled(Box)`
+// const LabelView = styled(Box)`
+//   width: 100%;
+//   max-width: 56rem;
+//   padding: 2rem;
+//   box-shadow: 0px 6px 24px 0px rgb(0, 0, 0, 0.3);
+//   background-color: ${(props) => props.theme.bgColors.primary};
+// `
+
+const LabelView = styled('div')`
   width: 100%;
-  max-width: 56rem;
-  padding: 2rem;
-  margin: 2rem auto 4rem;
+  max-width: 48rem;
+  margin: 0 auto;
 `
 
 const Label = styled('label')`
@@ -22,10 +29,12 @@ const Label = styled('label')`
 
 const LabelInput = styled('input')`
   padding-left: 5rem;
+  // background-color: ${(props) => props.theme.bgColors.secondary};
 
-  // &::placeholder {
-  //   color: ${(props) => props.theme.colors.primary};
-  // }
+  &::placeholder {
+    color: ${(props) => props.theme.colors.primary};
+    opacity: 0.5;
+  }
 `
 
 const LabelIcon = styled('span')`

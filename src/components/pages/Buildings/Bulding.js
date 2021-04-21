@@ -14,12 +14,12 @@ const BuildingWrapper = styled('div')`
   flex: 1 0 50%;
   min-width: 64rem;
   max-width: 72rem;
-  padding: 1.5rem;
+  padding: 0 1.5rem 3rem;
   @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
     flex: 1 0 100%;
     max-width: 100%;
     min-width: 0;
-    padding: 1.5rem 0;
+    padding: 0 0 3rem;
   }
 `
 
@@ -29,7 +29,8 @@ const BuildingView = styled(Box)`
   width: 100%;
   height: 100%;
   min-height: 20rem;
-  background-color: ${(props) => props.theme.bgColors.secondary};
+  background-color: ${(props) => props.theme.bgColors.primary};
+  // box-shadow: 0px 6px 24px 0px rgb(211, 212, 213, 1);
 `
 
 const BuildingImage = styled('div')`
@@ -39,26 +40,23 @@ const BuildingImage = styled('div')`
   right: 0;
   width: 24rem;
   display: flex;
-  // background-color: ${(props) => props.theme.bgColors.secondary};
+  background-color: ${(props) => props.theme.bgColors.tertiary};
 
-  // @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
-  //   display: none;
-  // }
+  @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
+    display: none;
+  }
 `
 
 const BuildingContent = styled('div')`
   height: 100%;
   display: flex;
   flex-direction: column;
-  // padding: 0 24rem 0 0;
   margin: 0 24rem 0 0;
   padding: 1.5rem 2rem;
-  @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
-    padding: 1.5rem 1.5rem;
-  }
 
   @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
-    padding: 0;
+    padding: 1.5rem 1.5rem;
+    margin: 0;
   }
 
   > div:first-of-type {
