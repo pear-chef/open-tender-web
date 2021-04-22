@@ -9,7 +9,7 @@ const BackgroundImageView = styled('div')`
   position: relative;
   flex-grow: 1;
   background-color: ${(props) =>
-    props.bgColor || props.theme.bgColors.secondary};
+    props.bgColor || props.theme.bgColors.tertiary};
 `
 
 const BackgroundImageImage = styled(BgImage)`
