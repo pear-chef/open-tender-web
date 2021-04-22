@@ -25,6 +25,8 @@ const AccountTabsView = styled('div')`
   height: ${(props) => props.theme.layout.navHeight};
   @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
     height: ${(props) => props.theme.layout.navHeightMobile};
+    // box-shadow: 0 -0.3rem 1.5rem rgba(0, 0, 0, 0.1);
+    box-shadow: 0px -2px 24px 0px rgba(0, 0, 0, 0.09);
   }
 `
 
