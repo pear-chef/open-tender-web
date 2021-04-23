@@ -13,6 +13,7 @@ const BackgroundView = styled('div')`
   left: 0;
   right: 76.8rem;
   display: flex;
+  background-color: ${(props) => props.theme.bgColors.dark};
 `
 
 const Background = ({ imageUrl }) => {

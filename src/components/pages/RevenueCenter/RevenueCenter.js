@@ -46,6 +46,7 @@ const RevenueCenter = () => {
   const dispatch = useDispatch()
   const history = useHistory()
   const [imageUrl, setImageUrl] = useState(null)
+  const [hasLoaded, setHasLoaded] = useState(false)
   const { slug } = useParams()
   const { auth } = useSelector(selectCustomer)
   const { geoLatLng, geoError } = useGeolocation()
@@ -56,6 +57,7 @@ const RevenueCenter = () => {
   const isLoading = loading === 'pending'
   const { windowRef } = useContext(AppContext)
   const title = revenueCenter ? revenueCenter.name : config.title
+  const showRevenueCenter = hasLoaded && !isLoading
 
   useEffect(() => {
     windowRef.current.scrollTop = 0
@@ -63,6 +65,7 @@ const RevenueCenter = () => {
     dispatch(setGeoLoading())
     dispatch(resetOrderType())
     dispatch(fetchRevenueCenter(slug))
+    setHasLoaded(true)
   }, [dispatch, slug, windowRef])
 
   useEffect(() => {
@@ -74,7 +77,7 @@ const RevenueCenter = () => {
   }, [geoLatLng, geoError, dispatch])
 
   useEffect(() => {
-    if (revenueCenter) {
+    if (revenueCenter && showRevenueCenter) {
       const { images, settings, revenue_center_type } = revenueCenter
       setImageUrl(makeImageUrl(images, config.background))
       const { service_types } = settings
@@ -87,7 +90,7 @@ const RevenueCenter = () => {
         dispatch(setOrderServiceType(revenue_center_type, serviceType))
       }
     }
-  }, [revenueCenter, config.background, dispatch])
+  }, [revenueCenter, config.background, dispatch, showRevenueCenter])
 
   return (
     <>
@@ -96,7 +99,7 @@ const RevenueCenter = () => {
           {title} | {siteTitle}
         </title>
       </Helmet>
-      <Background imageUrl={imageUrl || config.background} />
+      <Background imageUrl={isBrowser && imageUrl} />
       <Content maxWidth="76.8rem">
         <Header
           maxWidth="76.8rem"
@@ -118,7 +121,7 @@ const RevenueCenter = () => {
             )
           }
         />
-        <Main imageUrl={!isBrowser && imageUrl ? imageUrl : null}>
+        <Main imageUrl={!isBrowser && imageUrl}>
           <Container>
             <ScreenreaderTitle>{title}</ScreenreaderTitle>
             <div style={{ margin: '4rem 0 0' }}>

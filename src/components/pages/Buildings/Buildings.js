@@ -142,9 +142,6 @@ const Buildings = () => {
   const { geoLatLng, geoError } = useGeolocation()
   const noMatches = value && filtered && filtered.length === 0
   const displayed = filtered || open || []
-  console.log('filtered', filtered)
-  console.log('open', open)
-  console.log('displayed', displayed)
 
   useEffect(() => {
     windowRef.current.scrollTop = 0

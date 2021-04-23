@@ -9,7 +9,7 @@ import { fetchConfig } from './slices/configSlice'
 import GlobalStyles from './GlobalStyles'
 import Routes from './components/Routes'
 import {
-  Alerts,
+  // Alerts,
   CartButton,
   ErrorBoundary,
   Modal,
@@ -79,7 +79,7 @@ class App extends React.Component {
                 <ErrorBoundary>
                   <Router>
                     <Modal />
-                    <Alerts />
+                    {/* <Alerts /> */}
                     <Notifications />
                     <CartButton />
                     <Routes />
