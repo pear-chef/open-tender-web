@@ -8,8 +8,7 @@ import { BackgroundLoading } from '.'
 const BackgroundImageView = styled('div')`
   position: relative;
   flex-grow: 1;
-  background-color: ${(props) =>
-    props.bgColor || props.theme.bgColors.tertiary};
+  background-color: ${(props) => props.bgColor || props.theme.bgColors.dark};
 `
 
 const BackgroundImageImage = styled(BgImage)`
