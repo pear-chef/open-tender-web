@@ -130,7 +130,7 @@ const RevenueCenter = () => {
               ) : revenueCenter ? (
                 <RevenueCenterCard
                   revenueCenter={revenueCenter}
-                  showImage={true}
+                  showImage={false}
                   isLanding={true}
                 />
               ) : (

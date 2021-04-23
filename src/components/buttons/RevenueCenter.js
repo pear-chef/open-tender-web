@@ -17,7 +17,7 @@ const RevenueCenter = ({
   const autoSelect = useSelector(selectAutoSelect)
 
   const change = () => {
-    history.push(`/locations`)
+    history.push(`/locations/${revenueCenter.slug}`)
   }
 
   if (!revenueCenter || autoSelect) return null
