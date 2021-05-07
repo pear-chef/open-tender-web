@@ -35,6 +35,8 @@ export const RevenueCenterButtons = ({ revenueCenter, isLanding }) => {
   const hasDelivery =
     ((ft && ft.DELIVERY) || (ot && ot.DELIVERY)) &&
     serviceTypes.includes('DELIVERY')
+  const pickupMinutes = hasPickup ? ft.PICKUP.minutes : 0
+  const isDinner = pickupMinutes > 14 * 60
 
   const handleWalkin = () => {
     dispatch(setOrderServiceType(rcType, 'WALKIN', false))
@@ -73,7 +75,7 @@ export const RevenueCenterButtons = ({ revenueCenter, isLanding }) => {
           icon={iconMap.ShoppingBag}
           onClick={handlePickup}
         >
-          Leave In The Lobby
+          {isDinner ? 'Pick Up In Lobby' : 'Pick Up'}
         </ButtonStyled>
       )}
       {hasDelivery && (
@@ -82,7 +84,7 @@ export const RevenueCenterButtons = ({ revenueCenter, isLanding }) => {
           icon={iconMap.Truck}
           onClick={handleDelivery}
         >
-          Deliver To My Unit
+          Deliver
         </ButtonStyled>
       )}
     </>
