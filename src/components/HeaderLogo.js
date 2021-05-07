@@ -21,7 +21,7 @@ const HeaderLogoLink = styled('a')`
 
 const HeaderLogo = ({ useLight = false }) => {
   const brand = useSelector(selectBrand)
-  const logoUrl = useLight ? brand.logoLight : brand.logo
+  // const logoUrl = useLight ? brand.logoLight : brand.logo
 
   return (
     <HeaderLogoLink
@@ -29,7 +29,7 @@ const HeaderLogo = ({ useLight = false }) => {
       href={brand.url}
       rel="noopener noreferrer"
     >
-      <img src={logoUrl} alt="logo" />
+      <img src={brand.logoLight} alt="logo" />
     </HeaderLogoLink>
   )
 }
