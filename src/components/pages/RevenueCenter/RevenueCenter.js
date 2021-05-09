@@ -19,6 +19,7 @@ import {
   setGeoLatLng,
   setGeoError,
   setGeoLoading,
+  closeModal,
 } from '../../../slices'
 import { AppContext } from '../../../App'
 import {
@@ -62,6 +63,7 @@ const RevenueCenter = () => {
   useEffect(() => {
     windowRef.current.scrollTop = 0
     maybeRefreshVersion()
+    dispatch(closeModal())
     dispatch(setGeoLoading())
     dispatch(resetOrderType())
     dispatch(fetchRevenueCenter(slug))

@@ -64,7 +64,7 @@ export const RevenueCenterOrder = ({ revenueCenter, isMenu, isLanding }) => {
     revenueCenter && revenueCenter.settings.group_ordering
   const tz = revenueCenter ? timezoneMap[revenueCenter.timezone] : null
   const orderTime =
-    requestedAt && tz ? makeReadableDateStrFromIso(requestedAt, tz) : null
+    requestedAt && tz ? makeReadableDateStrFromIso(requestedAt, tz, true) : null
   const msg = makeRevenueCenterMsg(
     revenueCenter,
     serviceType,
@@ -86,10 +86,16 @@ export const RevenueCenterOrder = ({ revenueCenter, isMenu, isLanding }) => {
         <div>
           {orderTime && (
             <p style={{ margin: '0 0 2rem' }}>
-              <Text size="small">
-                Your current {serviceType.toLowerCase()} time is {orderTime}
+              <Message
+                size="small"
+                color="success"
+                style={{ borderRadius: '0.3rem' }}
+              >
+                <Text bold={true}>
+                  Your current {serviceType.toLowerCase()} time is {orderTime}
+                </Text>
                 {msg.message ? ` and ${msg.message.toLowerCase()}` : ''}.
-              </Text>
+              </Message>
             </p>
           )}
           <ButtonStyled
@@ -104,13 +110,13 @@ export const RevenueCenterOrder = ({ revenueCenter, isMenu, isLanding }) => {
           {msg.message && (
             <RevenueCenterOrderMessage>
               <p>
-                <Text
-                  color={msg.color}
+                <Message
                   size="small"
+                  color={msg.color}
                   style={{ borderRadius: '0.3rem' }}
                 >
                   {msg.message}
-                </Text>
+                </Message>
               </p>
             </RevenueCenterOrderMessage>
           )}

@@ -54,7 +54,7 @@ const RequestedAt = ({
   const st = serviceType === 'WALKIN' ? 'PICKUP' : serviceType
   const firstTimes = first_times ? first_times[st] : null
   const orderTimes = order_times ? order_times[st] : null
-  if (!revenueCenter) return null
+  if (!revenueCenter || !serviceType) return null
   const tz = timezoneMap[revenueCenter.timezone]
   const estimatedTime = makeEstimatedTime(
     requestedAt,
@@ -94,13 +94,15 @@ const RequestedAt = ({
           {forcedUpdate ? (
             <RequestedAtMessage>
               Your previous order time is no longer available and has been
-              updated to <span>{requestedTime}</span>. Use the calendar below to
-              change this.
+              updated to <span>{requestedTime}</span>. Click on a date on the
+              calendar below to change this or close this window to keep your
+              current time.
             </RequestedAtMessage>
           ) : (
             <RequestedAtMessage>
-              Your current order time is <span>{requestedTime}</span>. Use the
-              calendar below to change this.
+              Your current order time is <span>{requestedTime}</span>. Click on
+              a date on the calendar below to change this or close this window
+              to keep your current time.
             </RequestedAtMessage>
           )}
           <RequestedAtCalendar
