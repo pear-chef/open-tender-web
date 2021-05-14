@@ -182,8 +182,8 @@ const LastOrderButtons = ({
       <>
         <p>
           You ordered {orderTypeName} from {revenueCenter.name} last time, but
-          this building is no longer offering {orderTypeName} or {otherTypeName}
-          .
+          this building is not currently offering {orderTypeName} or{' '}
+          {otherTypeName}.
         </p>
         <p>
           {/* <Link to="/buildings">Start an order from a different building.</Link> */}
@@ -256,8 +256,13 @@ const AccountActions = () => {
   }
 
   const reorder = (serviceType, revenueCenter) => {
-    dispatch(setServiceType(serviceType))
-    history.push(`/menu/${revenueCenter.slug}`)
+    if (revenueCenter) {
+      dispatch(setServiceType(serviceType))
+      history.push(`/menu/${revenueCenter.slug}`)
+    } else {
+      dispatch(resetOrder())
+      history.push(`/buildings`)
+    }
   }
 
   const change = () => {
