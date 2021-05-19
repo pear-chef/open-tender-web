@@ -11,6 +11,24 @@ import {
 import { ButtonStyled } from '@open-tender/components'
 
 import iconMap from '../iconMap'
+import { makeServiceTypesToday } from './RevenueCenterOrder'
+
+const hasServiceType = (
+  serviceType,
+  firstTimes,
+  orderTimes,
+  serviceTypes,
+  todayServiceTypes
+) => {
+  let hasService =
+    ((firstTimes && firstTimes[serviceType]) ||
+      (orderTimes && orderTimes[serviceType])) &&
+    serviceTypes.includes(serviceType)
+  if (hasService && todayServiceTypes) {
+    hasService = todayServiceTypes.includes(serviceType)
+  }
+  return hasService
+}
 
 export const RevenueCenterButtons = ({ revenueCenter, isLanding }) => {
   const dispatch = useDispatch()
@@ -26,15 +44,12 @@ export const RevenueCenterButtons = ({ revenueCenter, isLanding }) => {
   const { first_times: ft, order_times: ot } = settings
   const menuSlug = `/menu/${slug}`
   const serviceType = useSelector(selectServiceType)
-  const serviceTypes =
-    isLanding || isOutpost ? ['PICKUP', 'DELIVERY'] : [serviceType]
-  const hasPickup =
-    ((ft && ft.PICKUP) || (ot && ot.PICKUP)) && serviceTypes.includes('PICKUP')
-  const hasWalkin =
-    ((ft && ft.PICKUP) || (ot && ot.PICKUP)) && serviceTypes.includes('WALKIN')
-  const hasDelivery =
-    ((ft && ft.DELIVERY) || (ot && ot.DELIVERY)) &&
-    serviceTypes.includes('DELIVERY')
+  const st = isLanding || isOutpost ? ['PICKUP', 'DELIVERY'] : [serviceType]
+  const stToday = isLanding ? makeServiceTypesToday(ft) : null
+  const hasWalkin = false
+  const hasPickup = hasServiceType('PICKUP', ft, ot, st, stToday)
+  const hasDelivery = hasServiceType('DELIVERY', ft, ot, st, stToday)
+
   const pickupMinutes = hasPickup ? ft.PICKUP.minutes : 0
   const isDinner = pickupMinutes > 14 * 60
 

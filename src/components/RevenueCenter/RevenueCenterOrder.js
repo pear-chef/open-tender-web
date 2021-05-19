@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import propTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from '@emotion/styled'
@@ -7,8 +7,13 @@ import {
   makeReadableDateStrFromIso,
   timezoneMap,
   capitalize,
+  todayDate,
 } from '@open-tender/js'
-import { selectOrder, selectGroupOrder } from '@open-tender/redux'
+import {
+  selectOrder,
+  selectGroupOrder,
+  setServiceType,
+} from '@open-tender/redux'
 import { ButtonStyled, Message, Text } from '@open-tender/components'
 
 import { openModal, selectConfig } from '../../slices'
@@ -54,6 +59,14 @@ const RevenueCenterOrderMessageMessage = styled('p')`
   }
 `
 
+export const makeServiceTypesToday = (firstTimes) => {
+  if (!firstTimes) return null
+  const today = todayDate()
+  return Object.entries(firstTimes).reduce((arr, [key, value]) => {
+    return value.date === today ? [...arr, key] : arr
+  }, [])
+}
+
 export const RevenueCenterOrder = ({ revenueCenter, isMenu, isLanding }) => {
   const dispatch = useDispatch()
   const { serviceType, requestedAt } = useSelector(selectOrder)
@@ -65,12 +78,22 @@ export const RevenueCenterOrder = ({ revenueCenter, isMenu, isLanding }) => {
   const tz = revenueCenter ? timezoneMap[revenueCenter.timezone] : null
   const orderTime =
     requestedAt && tz ? makeReadableDateStrFromIso(requestedAt, tz, true) : null
+  const { first_times } = revenueCenter ? revenueCenter.settings : {}
+  const serviceTypesToday = isLanding
+    ? makeServiceTypesToday(first_times)
+    : null
   const msg = makeRevenueCenterMsg(
     revenueCenter,
     serviceType,
     requestedAt,
     statusMessages
   )
+
+  useEffect(() => {
+    if (serviceTypesToday && !serviceTypesToday.includes(serviceType)) {
+      dispatch(setServiceType(serviceTypesToday[0]))
+    }
+  }, [serviceType, serviceTypesToday, dispatch])
 
   return (
     <RevenueCenterOrderView>
