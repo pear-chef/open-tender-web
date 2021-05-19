@@ -87,7 +87,7 @@ export const RevenueCenterButtons = ({ revenueCenter, isLanding }) => {
       {hasPickup && (
         <ButtonStyled
           label={`Order Pickup from ${name}`}
-          icon={iconMap.ShoppingBag}
+          icon={isDinner ? iconMap.ShoppingBag : iconMap.Coffee}
           onClick={handlePickup}
         >
           {isDinner ? 'Pick Up In Lobby' : 'Pick Up'}
