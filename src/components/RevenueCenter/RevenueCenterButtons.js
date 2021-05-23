@@ -49,7 +49,6 @@ export const RevenueCenterButtons = ({ revenueCenter, isLanding }) => {
   const hasWalkin = false
   const hasPickup = hasServiceType('PICKUP', ft, ot, st, stToday)
   const hasDelivery = hasServiceType('DELIVERY', ft, ot, st, stToday)
-
   const pickupMinutes = hasPickup ? ft.PICKUP.minutes : 0
   const isDinner = pickupMinutes > 14 * 60
 

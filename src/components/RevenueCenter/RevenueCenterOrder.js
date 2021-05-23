@@ -62,9 +62,17 @@ const RevenueCenterOrderMessageMessage = styled('p')`
 export const makeServiceTypesToday = (firstTimes) => {
   if (!firstTimes) return null
   const today = todayDate()
-  return Object.entries(firstTimes).reduce((arr, [key, value]) => {
-    return value.date === today ? [...arr, key] : arr
-  }, [])
+  const serviceTypesToday = Object.entries(firstTimes).reduce(
+    (arr, [key, value]) => {
+      return value.date === today ? [...arr, key] : arr
+    },
+    []
+  )
+  if (!serviceTypesToday.length) {
+    return Object.keys(firstTimes)
+  } else {
+    return serviceTypesToday
+  }
 }
 
 export const RevenueCenterOrder = ({ revenueCenter, isMenu, isLanding }) => {
@@ -88,12 +96,19 @@ export const RevenueCenterOrder = ({ revenueCenter, isMenu, isLanding }) => {
     requestedAt,
     statusMessages
   )
+  const missingServiceType =
+    serviceTypesToday && !serviceTypesToday.includes(serviceType)
+  const firstServiceType = serviceTypesToday ? serviceTypesToday[0] : null
 
   useEffect(() => {
-    if (serviceTypesToday && !serviceTypesToday.includes(serviceType)) {
-      dispatch(setServiceType(serviceTypesToday[0]))
+    if (
+      missingServiceType &&
+      firstServiceType &&
+      firstServiceType !== serviceType
+    ) {
+      dispatch(setServiceType(firstServiceType))
     }
-  }, [serviceType, serviceTypesToday, dispatch])
+  }, [serviceType, missingServiceType, firstServiceType, dispatch])
 
   return (
     <RevenueCenterOrderView>

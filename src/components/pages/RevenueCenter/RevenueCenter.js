@@ -123,7 +123,7 @@ const RevenueCenter = () => {
             )
           }
         />
-        <Main imageUrl={!isBrowser && imageUrl}>
+        <Main imageUrl={!isBrowser ? imageUrl : null}>
           <Container>
             <ScreenreaderTitle>{title}</ScreenreaderTitle>
             <div style={{ margin: '4rem 0 0' }}>
