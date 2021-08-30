@@ -162,7 +162,7 @@ const Buildings = () => {
   }, [loading, revenueCenters, open, setOpen])
 
   useEffect(() => {
-    if (value) {
+    if (value && open) {
       setFiltered([])
       setTimeout(() => {
         const matching = open.filter((i) => checkMatch(value, i))
