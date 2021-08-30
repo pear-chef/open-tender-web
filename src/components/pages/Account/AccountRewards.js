@@ -1,38 +1,41 @@
 import React, { useEffect } from 'react'
+import propTypes from 'prop-types'
+import { fetchCustomerRewards, selectCustomerRewards } from '@open-tender/redux'
 import { useDispatch, useSelector } from 'react-redux'
-import {
-  fetchCustomerRewards,
-  selectCustomerRewards,
-  selectCustomerRewardsLoading,
-} from '@open-tender/redux'
 
-import { Loading, LoyaltyProgram, PageSection } from '../..'
+import { Loading, PageSection, Rewards } from '../..'
 import { selectConfig } from '../../../slices'
 
-const AccountRewards = () => {
+const AccountRewards = ({ limit = 3 }) => {
   const dispatch = useDispatch()
   const { account } = useSelector(selectConfig)
-  const loyalty = useSelector(selectCustomerRewards)
-  const isLoading = useSelector(selectCustomerRewardsLoading)
-  const { title, subtitle } = account.loyalty
+  const {
+    entities: rewards,
+    loading,
+    error,
+  } = useSelector(selectCustomerRewards)
+  const hasRewards = rewards.length > 0 && !error
+  const displayed = limit ? rewards.slice(0, limit) : rewards
+  const isMore = rewards.length > displayed.length
 
   useEffect(() => {
     dispatch(fetchCustomerRewards())
   }, [dispatch])
 
-  if (!loyalty) return null
-
-  return (
-    <PageSection title={title} subtitle={subtitle} to="/rewards">
-      {isLoading ? (
-        <Loading text="Retrieving your loyalty status..." />
-      ) : (
-        <LoyaltyProgram program={loyalty} />
-      )}
+  return hasRewards ? (
+    <PageSection {...account.rewards} to={isMore ? '/rewards' : null}>
+      {loading === 'pending' ? (
+        <Loading text="Checking for rewards..." />
+      ) : hasRewards ? (
+        <Rewards rewards={displayed} />
+      ) : null}
     </PageSection>
-  )
+  ) : null
 }
 
 AccountRewards.displayName = 'AccountRewards'
+AccountRewards.propTypes = {
+  limit: propTypes.number,
+}
 
 export default AccountRewards
