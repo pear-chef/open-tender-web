@@ -17,6 +17,8 @@ Sentry.init({
     'TypeError: Failed to fetch',
     'TypeError: NetworkError when attempting to fetch resource.',
     'TypeError: Cancelled',
+    'Object Not Found Matching Id',
+    'Return statements are only valid inside functions',
   ],
 })
 
