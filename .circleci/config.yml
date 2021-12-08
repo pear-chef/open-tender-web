@@ -4,7 +4,7 @@ version: 2
 defaults: &defaults
   working_directory: ~/open-tender-web
   docker:
-    - image: circleci/node:10-browsers
+    - image: circleci/node:12-browsers
 
 jobs:
   deploy-staging:
@@ -26,6 +26,7 @@ jobs:
           root: .
           paths: .
       - run: NODE_ENV=production CI="" yarn build:staging
+      - run: sudo apt-get update
       - run: sudo apt-get install python-dev python-pip
       - run: sudo pip install awscli
       - run: aws configure set preview.cloudfront true
@@ -52,6 +53,7 @@ jobs:
           root: .
           paths: .
       - run: NODE_ENV=production CI="" yarn build
+      - run: sudo apt-get update
       - run: sudo apt-get install python-dev python-pip
       - run: sudo pip install awscli
       - run: aws configure set preview.cloudfront true

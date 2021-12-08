@@ -32,7 +32,7 @@ const BuilderView = styled('aside')`
   right: 0;
   width: 64rem;
   max-width: 100%;
-  background-color: ${(props) => props.theme.bgColors.light};
+  background-color: ${(props) => props.theme.bgColors.primary};
 
   > div {
     position: relative;

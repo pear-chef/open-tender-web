@@ -13,6 +13,8 @@ import {
   selectGroupOrder,
   selectMenuSlug,
   showNotification,
+  selectOrder,
+  selectCustomerPointsProgram,
 } from '@open-tender/redux'
 import { ButtonStyled } from '@open-tender/components'
 
@@ -89,6 +91,8 @@ const MenuItem = () => {
   const soldOut = useSelector(selectSoldOut)
   const allergens = useSelector(selectSelectedAllergenNames)
   const displaySettings = useSelector(selectDisplaySettings)
+  const { orderType } = useSelector(selectOrder)
+  const pointsProgram = useSelector(selectCustomerPointsProgram(orderType))
   const { cartId } = useSelector(selectGroupOrder)
   const imageUrl = item
     ? item.large_image_url ||
@@ -153,6 +157,7 @@ const MenuItem = () => {
                 allergenAlerts={allergens}
                 displaySettings={displaySettings}
                 cartId={cartId}
+                hasPoints={!!pointsProgram}
               />
             </MenuItemBuilderView>
           </MenuItemView>

@@ -8,7 +8,7 @@ import { BackgroundLoading } from '.'
 const BackgroundImageView = styled('div')`
   position: relative;
   flex-grow: 1;
-  background-color: ${(props) => props.bgColor || props.theme.bgColors.dark};
+  background-color: ${(props) => props.theme.bgColors.tertiary};
 `
 
 const BackgroundImageImage = styled(BgImage)`
@@ -46,8 +46,6 @@ const BackgroundImage = ({
   show_overlay = false,
   overlay_color,
   overlay_opacity,
-  loaderColor = null,
-  bgColor = null,
   style = {},
   children,
 }) => {
@@ -60,9 +58,9 @@ const BackgroundImage = ({
   const overlayColor = makeOverlayColor(overlay_color, overlay_opacity)
 
   return (
-    <BackgroundImageView style={style} bgColor={bgColor}>
+    <BackgroundImageView style={style}>
       {isLoading ? (
-        <BackgroundLoading color={loaderColor} />
+        <BackgroundLoading />
       ) : (
         <>
           <BackgroundImageImage style={bgStyle} />

@@ -96,7 +96,7 @@ const CreditCards = ({ creditCards, isLoading, showDefault = true }) => {
 }
 
 CreditCards.displayName = 'CreditCards'
-CreditCards.prototypes = {
+CreditCards.propTypes = {
   creditCards: propTypes.array,
   isLoading: propTypes.bool,
   showDefault: propTypes.bool,

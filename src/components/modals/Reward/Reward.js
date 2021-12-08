@@ -11,9 +11,10 @@ import {
   Message,
 } from '@open-tender/components'
 
-import { closeModal, openModal, selectAPI } from '../../../slices'
+import { closeModal, openModal, selectApi, selectBrand } from '../../../slices'
 import { ModalContent, ModalView, QRCode } from '../..'
 import RewardImage from './RewardImage'
+import { makeLimitations } from '../../Reward'
 
 const RewardView = styled('div')`
   display: flex;
@@ -25,42 +26,70 @@ const RewardView = styled('div')`
 `
 
 const RewardHeader = styled('div')`
+  margin: 0 0 1rem;
+
   & > p {
     margin: 0;
   }
 
   p:first-of-type {
     font-size: ${(props) => props.theme.fonts.sizes.h3};
-    line-height: 1;
+    line-height: 1.1;
     margin: 0;
   }
 
   p + p {
     font-size: ${(props) => props.theme.fonts.sizes.small};
     line-height: ${(props) => props.theme.lineHeight};
-    margin: 0.5rem 0;
+    margin: 1rem 0 0;
   }
 `
 
 const RewardFinePrint = styled('div')`
   & > p {
     font-size: ${(props) => props.theme.fonts.sizes.xSmall};
-    line-height: 1.2;
-    margin: 0 !important;
+    line-height: ${(props) => props.theme.lineHeight};
+    // margin: 0 !important;
   }
 `
 
 const RewardContent = styled('div')`
-  margin: 1.5rem 0 0;
+  width: 100%;
+  margin: 1.5rem 0 1rem;
 
   p {
-    font-size: ${(props) => props.theme.fonts.sizes.small};
+    font-size: ${(props) => props.theme.fonts.sizes.xSmall};
+    line-height: ${(props) => props.theme.lineHeight};
+
+    button {
+      margin: 1rem 0 0;
+    }
   }
 `
 
 const RewardQRCodeView = styled('div')`
   width: 16rem;
-  margin: 0 auto;
+  margin: 1rem auto;
+`
+
+const RewardNote = styled('div')`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 0 0.5rem;
+  font-size: ${(props) => props.theme.fonts.sizes.xSmall};
+
+  span {
+    display: block;
+    line-height: 1.4;
+  }
+
+  span:first-of-type {
+    width: 1.2rem;
+    height: 1.2rem;
+    margin: 0 0.4rem 0 0;
+    // color: ${(props) => props.theme.links.primary.color};
 `
 
 const errors = {
@@ -76,10 +105,12 @@ const Reward = ({ reward }) => {
   const [fetching, setFetching] = useState(false)
   const [error, setError] = useState(null)
   const { title, description, imageUrl, expiration, service_type } = reward
-  const api = useSelector(selectAPI)
+  const limitations = makeLimitations(reward)
+  const api = useSelector(selectApi)
   const { profile } = useSelector(selectCustomer)
+  const { has_pos } = useSelector(selectBrand)
   const { customer_id, is_verified } = profile || {}
-  const hasQRCode = !service_type || service_type === 'WALKIN'
+  const hasQRCode = has_pos && (!service_type || service_type === 'WALKIN')
 
   const scan = async () => {
     setFetching(true)
@@ -162,10 +193,13 @@ const Reward = ({ reward }) => {
             ) : imageUrl ? (
               <RewardImage src={imageUrl} alt={title} />
             ) : null}
-            <p>
-              To redeem online, add the relevant items to your cart and apply
-              this reward on the Checkout page
-            </p>
+            <RewardNote>{limitations}</RewardNote>
+            {service_type !== 'WALKIN' && (
+              <p>
+                To redeem online, add the relevant items to your cart and apply
+                this reward on the Checkout page
+              </p>
+            )}
             {hasQRCode && !qrCodeUrl && (
               <>
                 {error && (
@@ -182,7 +216,10 @@ const Reward = ({ reward }) => {
             )}
           </RewardContent>
           <div>
-            <ButtonStyled onClick={() => dispatch(closeModal())}>
+            <ButtonStyled
+              color="secondary"
+              onClick={() => dispatch(closeModal())}
+            >
               Close
             </ButtonStyled>
           </div>
@@ -193,7 +230,7 @@ const Reward = ({ reward }) => {
 }
 
 Reward.displayName = 'Reward'
-Reward.prototypes = {
+Reward.propTypes = {
   reward: propTypes.object,
 }
 

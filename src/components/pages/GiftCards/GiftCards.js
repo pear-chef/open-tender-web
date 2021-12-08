@@ -1,5 +1,4 @@
 import React, { useCallback, useContext, useEffect } from 'react'
-import { isBrowser } from 'react-device-detect'
 import { useDispatch, useSelector } from 'react-redux'
 import { Helmet } from 'react-helmet'
 import { Minus, Plus } from 'react-feather'
@@ -71,7 +70,7 @@ const GiftCards = () => {
         </title>
       </Helmet>
       <Content>
-        <HeaderDefault title={isBrowser ? null : config.title} />
+        <HeaderDefault />
         <Main>
           <PageContainer style={{ maxWidth: '76.8rem' }}>
             <PageTitle {...config} />

@@ -94,18 +94,31 @@ const CartButtonCount = styled('div')`
   min-width: 2.6rem;
   height: 2.6rem;
   border-radius: 1.3rem;
-  padding-bottom: 0.1rem;
-  border-width: 0.2rem;
   border-style: solid;
-  color: ${(props) => props.theme.colors.light};
-  background-color: ${(props) => props.theme.colors.error};
-  border-color: ${(props) => props.theme.colors.light};
-  font-weight: ${(props) => props.theme.boldWeight};
-  font-size: ${(props) => props.theme.fonts.sizes.small};
+  border-width: ${(props) => props.theme.counts.alerts.borderWidth};
+  padding-top: ${(props) => props.theme.counts.alerts.paddingTop};
+  padding-bottom: ${(props) => props.theme.counts.alerts.paddingBottom};
+  color: ${(props) => props.theme.counts.alerts.color};
+  background-color: ${(props) => props.theme.counts.alerts.bgColor};
+  border-color: ${(props) => props.theme.counts.alerts.borderColor};
   @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
     top: -0.2rem;
     right: -0.2rem;
-    font-size: ${(props) => props.theme.fonts.sizes.xSmall};
+    min-width: 2.4rem;
+    height: 2.4rem;
+  }
+
+  span {
+    display: block;
+    line-height: 0;
+    font-family: ${(props) => props.theme.counts.alerts.family};
+    font-weight: ${(props) => props.theme.counts.alerts.weight};
+    font-size: ${(props) => props.theme.counts.alerts.fontSize};
+    -webkit-font-smoothing: ${(props) =>
+      props.theme.counts.alerts.fontSmoothing};
+    @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
+      font-size: ${(props) => props.theme.counts.alerts.fontSizeMobile};
+    }
   }
 `
 
@@ -124,7 +137,11 @@ const CartButton = () => {
   return showCart ? (
     <CartButtonView role="region">
       <CartButtonContainer>
-        {cartQuantity > 0 && <CartButtonCount>{cartQuantity}</CartButtonCount>}
+        {cartQuantity > 0 && (
+          <CartButtonCount>
+            <span>{cartQuantity}</span>
+          </CartButtonCount>
+        )}
         <CartButtonButton
           onClick={toggle}
           aria-label="Open cart to review order, press escape key to access at any time"

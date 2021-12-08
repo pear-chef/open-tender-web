@@ -10,7 +10,7 @@ import {
 import { Helmet } from 'react-helmet'
 
 import { maybeRefreshVersion } from '../../../app/version'
-import { selectAccountConfig, selectBrand } from '../../../slices'
+import { selectBrand, selectConfig } from '../../../slices'
 import {
   AccountBack,
   Content,
@@ -31,7 +31,7 @@ const AccountHouseAccounts = () => {
   const history = useHistory()
   const { title: siteTitle } = useSelector(selectBrand)
   const { auth } = useSelector(selectCustomer)
-  const account = useSelector(selectAccountConfig)
+  const { houseAccounts: config } = useSelector(selectConfig)
   const { entities, loading, error } = useSelector(selectCustomerHouseAccounts)
   const isLoading = loading === 'pending'
   const { windowRef } = useContext(AppContext)
@@ -53,15 +53,15 @@ const AccountHouseAccounts = () => {
     <>
       <Helmet>
         <title>
-          {account.houseAccounts.title} | {siteTitle}
+          {config.title} | {siteTitle}
         </title>
       </Helmet>
       <Content>
-        <HeaderUser title={isBrowser ? null : account.houseAccounts.title} />
+        <HeaderUser />
         <Main>
           {!isBrowser && <AccountTabs />}
           <PageContainer style={{ maxWidth: '76.8rem' }}>
-            <PageTitle {...account.houseAccounts} preface={<AccountBack />} />
+            <PageTitle {...config} preface={<AccountBack />} />
             <PageError error={error} />
             {entities.length ? (
               <HouseAccountsList houseAccounts={entities} />
@@ -70,7 +70,10 @@ const AccountHouseAccounts = () => {
                 {isLoading ? (
                   <Loading text="Retrieving your house accounts..." />
                 ) : (
-                  <p>{account.houseAccounts.empty}</p>
+                  <p>
+                    Looks like your account isn't currently associated with any
+                    house accounts.
+                  </p>
                 )}
               </PageContent>
             )}

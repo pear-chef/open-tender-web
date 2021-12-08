@@ -64,13 +64,13 @@ import PageSectionHeader from './PageSectionHeader'
 import PageTitle from './PageTitle'
 import PageTitleButtons from './PageTitleButtons'
 import PageView from './PageView'
+import PointsBalance from './PointsBalance'
 import ProgressBar from './ProgressBar'
 import ProgressCircle from './ProgressCircle'
 import QRCode from './QRCode'
 import RevenueCenter, { RevenueCenterChild } from './RevenueCenter'
 import Reward from './Reward'
 import Rewards from './Rewards'
-import RewardsSection from './RewardsSection'
 import Routes from './Routes'
 import Row from './Row'
 import ScreenreaderTitle from './ScreenreaderTitle'
@@ -81,7 +81,6 @@ import Sidebar from './Sidebar'
 import SidebarModal from './SidebarModal'
 import SkipLink from './SkipLink'
 import Slider from './Slider'
-import SliderKeen from './SliderKeen'
 import Tag from './Tag'
 import VerifyAccount from './VerifyAccount'
 
@@ -155,6 +154,7 @@ export {
   PageTitle,
   PageTitleButtons,
   PageView,
+  PointsBalance,
   ProgressBar,
   ProgressCircle,
   QRCode,
@@ -162,7 +162,6 @@ export {
   RevenueCenterChild,
   Reward,
   Rewards,
-  RewardsSection,
   Routes,
   Row,
   ScreenreaderTitle,
@@ -173,7 +172,6 @@ export {
   SidebarModal,
   SkipLink,
   Slider,
-  SliderKeen,
   Tag,
   VerifyAccount,
 }

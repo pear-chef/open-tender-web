@@ -16,6 +16,7 @@ import Logout from './Logout'
 import Menu from './Menu'
 import NavMenu from './NavMenu'
 import OrderNow from './OrderNow'
+import Points from './Points'
 import Reopen from './Reopen'
 import RequestedAt from './RequestedAt'
 import RevenueCenter from './RevenueCenter'
@@ -41,6 +42,7 @@ export {
   Menu,
   NavMenu,
   OrderNow,
+  Points,
   Reopen,
   RequestedAt,
   RevenueCenter,

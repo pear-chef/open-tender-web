@@ -1,5 +1,4 @@
 import React, { useContext, useEffect } from 'react'
-import { isBrowser } from 'react-device-detect'
 import { useSelector } from 'react-redux'
 import { Helmet } from 'react-helmet'
 
@@ -35,7 +34,7 @@ const Refunds = () => {
         </title>
       </Helmet>
       <Content>
-        <HeaderDefault title={isBrowser ? null : config.title} />
+        <HeaderDefault />
         <Main>
           <PageContainer style={{ maxWidth: '76.8rem' }}>
             <PageTitle {...config} />

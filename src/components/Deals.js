@@ -8,6 +8,7 @@ const DealsView = styled('div')`
   opacity: 0;
   animation: slide-up 0.25s ease-in-out 0.25s forwards;
   margin: -1rem;
+  margin: -0.5rem;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -18,8 +19,11 @@ const DealsView = styled('div')`
 `
 
 const Deal = styled('div')`
-  width: 33.33333%;
-  padding: 1rem;
+  // width: 33.33333%;
+  // padding: 0.5rem;
+  width: 50%;
+  max-width: 42rem;
+  padding: 0.5rem;
   @media (max-width: ${(props) => props.theme.breakpoints.narrow}) {
     width: 50%;
     padding: 0.5rem;

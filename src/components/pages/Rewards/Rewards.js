@@ -8,24 +8,17 @@ import { selectCustomer } from '@open-tender/redux'
 import { maybeRefreshVersion } from '../../../app/version'
 import { AppContext } from '../../../App'
 import { selectBrand, selectConfig } from '../../../slices'
-import {
-  Content,
-  HeaderUser,
-  Main,
-  PageContainer,
-  PageTitle,
-  // RewardsSection,
-} from '../..'
+import { Content, HeaderUser, Main, PageContainer, PageTitle } from '../..'
 import AccountTabs from '../Account/AccountTabs'
-import LoyaltyProgams from './LoyaltyProgams'
-import ThanxLoyalty from './ThanxLoyalty'
 import LevelUpLoyalty from './LevelUpLoyalty'
+import ThanxLoyalty from './ThanxLoyalty'
+import LoyaltyRewards from './LoyaltyRewards'
 
 const Rewards = () => {
   const history = useHistory()
   const { title: siteTitle, has_thanx, has_levelup } = useSelector(selectBrand)
-  const { account } = useSelector(selectConfig)
-  const config = has_levelup ? account.levelup : account.loyalty
+  const { account, rewards } = useSelector(selectConfig)
+  const config = has_levelup ? account.levelup : rewards
   const { auth } = useSelector(selectCustomer)
   const { windowRef } = useContext(AppContext)
 
@@ -44,7 +37,7 @@ const Rewards = () => {
         <title>Rewards | {siteTitle}</title>
       </Helmet>
       <Content>
-        <HeaderUser title={isBrowser ? null : 'Rewards'} />
+        <HeaderUser />
         <Main>
           {!isBrowser && <AccountTabs />}
           <PageContainer>
@@ -54,10 +47,7 @@ const Rewards = () => {
             ) : has_thanx ? (
               <ThanxLoyalty />
             ) : (
-              <>
-                <LoyaltyProgams />
-                {/* <RewardsSection limit={null} /> */}
-              </>
+              <LoyaltyRewards />
             )}
           </PageContainer>
         </Main>

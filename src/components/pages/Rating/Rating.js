@@ -2,7 +2,6 @@ import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { Link, useLocation, useParams } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { Helmet } from 'react-helmet'
-import { isBrowser } from 'react-device-detect'
 import {
   selectOrderRating,
   fetchOrderRating,
@@ -122,7 +121,7 @@ const Rating = () => {
         </title>
       </Helmet>
       <Content>
-        <HeaderDefault title={isBrowser ? null : 'Rate Your Order'} />
+        <HeaderDefault />
         <Main>
           <PageContainer style={{ maxWidth: '76.8rem' }}>
             <PageTitle {...pageTitles} />

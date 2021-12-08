@@ -7,8 +7,16 @@ import {
   makeEstimatedTime,
   serviceTypeNamesMap,
 } from '@open-tender/js'
-import { selectOrder, setRequestedAt } from '@open-tender/redux'
-import { RequestedAtCalendar, RequestedAtTimes } from '@open-tender/components'
+import {
+  selectOrder,
+  setRequestedAt,
+  showNotification,
+} from '@open-tender/redux'
+import {
+  ButtonStyled,
+  RequestedAtCalendar,
+  RequestedAtTimes,
+} from '@open-tender/components'
 
 import { closeModal, toggleSidebar } from '../../slices'
 import { ModalContent } from '..'
@@ -16,7 +24,7 @@ import styled from '@emotion/styled'
 import ModalView from '../Modal/ModalView'
 
 const RequestedAtModalView = styled(ModalView)`
-  width: 44rem;
+  width: ${(props) => props.width};
   @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
     max-width: 100%;
     min-height: 100%;
@@ -32,13 +40,30 @@ const RequestedAtModalView = styled(ModalView)`
 `
 
 const RequestedAtMessage = styled('p')`
-  margin: 0 0 2rem;
+  margin: 0 0 1.5rem;
   font-size: ${(props) => props.theme.fonts.sizes.small};
   line-height: ${(props) => props.theme.lineHeight};
-  color: ${(props) => props.theme.colors.alert};
+  // color: ${(props) => props.theme.colors.alert};
 
   span {
     font-weight: 600;
+  }
+`
+
+const RequestedAtPickerButtons = styled('div')`
+  display: flex;
+  align-items: center;
+  margin: 0 -0.5rem 1.5rem;
+
+  div {
+    width: 50%;
+    padding: 0 0.5rem;
+
+    button {
+      width: 100%;
+      padding-left: 0;
+      padding-right: 0;
+    }
   }
 `
 
@@ -54,7 +79,12 @@ const RequestedAt = ({
   const st = serviceType === 'WALKIN' ? 'PICKUP' : serviceType
   const firstTimes = first_times ? first_times[st] : null
   const orderTimes = order_times ? order_times[st] : null
+<<<<<<< HEAD
   if (!revenueCenter || !serviceType) return null
+=======
+  const hasAsap = firstTimes && firstTimes.has_asap ? true : false
+  if (!revenueCenter) return null
+>>>>>>> upstream/main
   const tz = timezoneMap[revenueCenter.timezone]
   const estimatedTime = makeEstimatedTime(
     requestedAt,
@@ -70,6 +100,7 @@ const RequestedAt = ({
   const handleRequestedAt = (requestedAt) => {
     dispatch(closeModal())
     dispatch(setRequestedAt(requestedAt))
+    dispatch(showNotification('Requested time updated!'))
     if (onCloseAction) dispatch(onCloseAction())
     if (openSidebar) dispatch(toggleSidebar())
   }
@@ -82,7 +113,7 @@ const RequestedAt = ({
   }
 
   return (
-    <RequestedAtModalView>
+    <RequestedAtModalView width={firstTimes ? '44rem' : '56rem'}>
       {firstTimes ? (
         <ModalContent
           title={
@@ -94,6 +125,7 @@ const RequestedAt = ({
           {forcedUpdate ? (
             <RequestedAtMessage>
               Your previous order time is no longer available and has been
+<<<<<<< HEAD
               updated to <span>{requestedTime}</span>. Click on a date on the
               calendar below to change this or close this window to keep your
               current time.
@@ -103,14 +135,39 @@ const RequestedAt = ({
               Your current order time is <span>{requestedTime}</span>. Click on
               a date on the calendar below to change this or close this window
               to keep your current time.
+=======
+              updated to <span>{requestedTime}</span>.
+            </RequestedAtMessage>
+          ) : (
+            <RequestedAtMessage>
+              Your current order time is <span>{requestedTime}</span>.
+>>>>>>> upstream/main
             </RequestedAtMessage>
           )}
+          <RequestedAtPickerButtons>
+            <div>
+              <ButtonStyled onClick={handleKeepCurrent}>
+                Keep This Time
+              </ButtonStyled>
+            </div>
+            {hasAsap && requestedAt !== 'asap' && (
+              <div>
+                <ButtonStyled
+                  onClick={() => handleRequestedAt('asap')}
+                  color="secondary"
+                >
+                  Switch to ASAP
+                </ButtonStyled>
+              </div>
+            )}
+          </RequestedAtPickerButtons>
+          <RequestedAtMessage>
+            Or use the calendar below to choose a different time.
+          </RequestedAtMessage>
           <RequestedAtCalendar
-            requestedAt={requestedAt}
             serviceType={serviceType}
             revenueCenter={revenueCenter}
             setRequestedAt={handleRequestedAt}
-            keepCurrent={handleKeepCurrent}
           />
         </ModalContent>
       ) : orderTimes ? (

@@ -1,7 +1,6 @@
 import React, { useContext, useEffect } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import { isBrowser } from 'react-device-detect'
 import { Helmet } from 'react-helmet'
 import { fetchOrderFulfillment } from '@open-tender/redux'
 
@@ -44,7 +43,7 @@ const Fulfillment = () => {
         <title>Curbside Pickup | {siteTitle}</title>
       </Helmet>
       <Content>
-        <HeaderDefault title={isBrowser ? null : 'Curbside Pickup'} />
+        <HeaderDefault />
         <Main>
           <PageContainer style={{ maxWidth: '76.8rem' }}>
             <PageContent>

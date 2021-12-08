@@ -91,13 +91,8 @@ const RevenueCentersSelect = () => {
   const { maxDistance, locationName } = useSelector(selectSettings)
   const geoLatLng = useSelector(selectGeoLatLng)
   const { revenueCenters, loading } = useSelector(selectRevenueCenters)
-  const {
-    serviceType,
-    orderType,
-    isOutpost,
-    address,
-    requestedAt,
-  } = useSelector(selectOrder)
+  const { serviceType, orderType, isOutpost, address, requestedAt } =
+    useSelector(selectOrder)
   const coords = address || geoLatLng
   const autoSelect = useSelector(selectAutoSelect)
   const [title, setTitle] = useState(rcConfig.title)
@@ -188,7 +183,10 @@ const RevenueCentersSelect = () => {
             {showRevenueCenters ? (
               <RevenueCentersSelectList>
                 {displayedRevenueCenters.map((revenueCenter) => (
-                  <li key={revenueCenter.revenue_center_id}>
+                  <li
+                    id={revenueCenter.slug}
+                    key={revenueCenter.revenue_center_id}
+                  >
                     <RevenueCenter
                       revenueCenter={revenueCenter}
                       showImage={!isMobileOnly}
@@ -197,7 +195,7 @@ const RevenueCentersSelect = () => {
                 ))}
               </RevenueCentersSelectList>
             ) : (
-              <div style={{ margin: '3rem 0 0' }}>
+              <div style={{ margin: '3rem auto 0', textAlign: 'center' }}>
                 <ButtonStyled
                   icon={iconMap.RefreshCw}
                   onClick={handleStartOver}

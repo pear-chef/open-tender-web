@@ -86,8 +86,9 @@ const ThanxRewardDescription = styled('p')`
   font-size: ${(props) => props.theme.fonts.sizes.xSmall};
 `
 
-const ThanxReward = ({ reward }) => {
-  const { name, description } = reward
+const ThanxReward = ({ item }) => {
+  const { name, description } = item || {}
+  if (!name) return null
   return (
     <ThanxRewardView>
       <p>

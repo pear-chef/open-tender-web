@@ -22,17 +22,11 @@ import {
 import { AppContext } from '../../../App'
 import AccountTabs from '../Account/AccountTabs'
 
-const defaultConfig = {
-  title: 'Deals',
-  subtitle: 'Daily offers available to all customers. Check back daily!',
-}
-
 const Deals = () => {
   const history = useHistory()
   const dispatch = useDispatch()
   const { title: siteTitle, has_deals } = useSelector(selectBrand)
-  const { account: accountConfig } = useSelector(selectConfig)
-  const config = { ...accountConfig, ...defaultConfig }
+  const { deals: config } = useSelector(selectConfig)
   const { auth, profile } = useSelector(selectCustomer)
   const { customer_id } = profile || {}
   const { windowRef } = useContext(AppContext)
@@ -61,11 +55,7 @@ const Deals = () => {
         </title>
       </Helmet>
       <Content>
-        {auth ? (
-          <HeaderUser title={isBrowser ? null : config.title} />
-        ) : (
-          <HeaderDefault title={isBrowser ? null : config.title} />
-        )}
+        {auth ? <HeaderUser /> : <HeaderDefault />}
         <Main>
           {!isBrowser && auth && <AccountTabs />}
           <PageContainer>

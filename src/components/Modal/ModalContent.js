@@ -30,8 +30,8 @@ const ModalSubtitle = styled('div')`
 `
 
 const ModalBody = styled('div')`
-  > div {
-    p {
+  & > div {
+    & > p {
       margin: 1em 0;
       line-height: ${(props) => props.theme.lineHeight};
 

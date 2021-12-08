@@ -13,7 +13,7 @@ import { makeUniqueDisplayItems } from '@open-tender/js'
 import { ButtonStyled, ButtonToggleGroup } from '@open-tender/components'
 
 import { maybeRefreshVersion } from '../../../app/version'
-import { selectAccountConfig, selectBrand } from '../../../slices'
+import { selectBrand, selectConfig } from '../../../slices'
 import { AppContext } from '../../../App'
 import {
   Content,
@@ -52,7 +52,7 @@ const Orders = () => {
   const { entities, loading, error } = orders
   const [recentOrders, setRecentOrders] = useState(entities.slice(0, count))
   const { title: siteTitle } = useSelector(selectBrand)
-  const config = useSelector(selectAccountConfig)
+  const { orders: config } = useSelector(selectConfig)
   const { auth } = useSelector(selectCustomer)
   const isLoading = loading === 'pending'
   const { windowRef } = useContext(AppContext)
@@ -89,14 +89,16 @@ const Orders = () => {
   return (
     <>
       <Helmet>
-        <title>Order History | {siteTitle}</title>
+        <title>
+          {config.title} | {siteTitle}
+        </title>
       </Helmet>
       <Content>
-        <HeaderUser title={isBrowser ? null : 'Order History'} />
+        <HeaderUser />
         <Main>
           {!isBrowser && <AccountTabs />}
           <PageContainer style={{ maxWidth: '100%' }}>
-            <PageTitle {...config.recentOrders} />
+            <PageTitle {...config} />
             <PageError error={error} />
             {recentOrders.length ? (
               <>

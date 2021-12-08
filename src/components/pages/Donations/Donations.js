@@ -1,5 +1,4 @@
 import React, { useCallback, useContext, useEffect } from 'react'
-import { isBrowser } from 'react-device-detect'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
@@ -62,7 +61,7 @@ const Donations = () => {
         </title>
       </Helmet>
       <Content>
-        <HeaderDefault title={isBrowser ? null : config.title} />
+        <HeaderDefault />
         <Main>
           <PageContainer style={{ maxWidth: '76.8rem' }}>
             <PageTitle {...config} />

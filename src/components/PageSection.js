@@ -49,9 +49,16 @@ const PageSectionLink = styled('div')`
   }
 `
 
-const PageSection = ({ title, subtitle, to, style = null, children }) => {
+const PageSection = ({
+  id = null,
+  title,
+  subtitle,
+  to,
+  style = null,
+  children,
+}) => {
   return (
-    <PageSectionView style={style}>
+    <PageSectionView id={id} style={style}>
       <PageSectionHeader title={title} subtitle={subtitle} />
       {children}
       {to && (
@@ -72,8 +79,10 @@ const PageSection = ({ title, subtitle, to, style = null, children }) => {
 
 PageSection.displayName = 'PageHeader'
 PageSection.propTypes = {
+  id: propTypes.string,
   title: propTypes.string,
   subtitle: propTypes.string,
+  to: propTypes.string,
   children: propTypes.oneOfType([
     propTypes.arrayOf(propTypes.node),
     propTypes.node,

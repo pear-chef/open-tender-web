@@ -13,7 +13,7 @@ import {
 import { getLastOrder, makeDisplayItem } from '@open-tender/js'
 
 import { maybeRefreshVersion } from '../../../app/version'
-import { selectAccountConfig, selectBrand } from '../../../slices'
+import { selectConfig, selectBrand } from '../../../slices'
 import { AppContext } from '../../../App'
 import {
   Content,
@@ -37,7 +37,7 @@ const Favorites = () => {
   const lastOrder = useMemo(() => getLastOrder(orders), [orders])
   const [favorites, setFavorites] = useState(entities)
   const { title: siteTitle } = useSelector(selectBrand)
-  const config = useSelector(selectAccountConfig)
+  const { favorites: config } = useSelector(selectConfig)
   const { auth } = useSelector(selectCustomer)
   const isLoading = loading === 'pending'
   const items = favorites.map((i) => ({ ...i.item }))
@@ -76,14 +76,16 @@ const Favorites = () => {
   return auth ? (
     <>
       <Helmet>
-        <title>Order History | {siteTitle}</title>
+        <title>
+          {config.title} | {siteTitle}
+        </title>
       </Helmet>
       <Content>
-        <HeaderUser title={isBrowser ? null : 'Favorites'} />
+        <HeaderUser />
         <Main>
           {!isBrowser && <AccountTabs />}
           <PageContainer style={{ maxWidth: '100%' }}>
-            <PageTitle {...config.favorites} />
+            <PageTitle {...config} />
             <PageError error={error} />
             {items.length ? (
               <ItemCards

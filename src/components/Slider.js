@@ -4,6 +4,7 @@ import styled from '@emotion/styled'
 import iconMap from './iconMap'
 import { isBrowser } from 'react-device-detect'
 import { BackgroundContent, BackgroundImage } from '.'
+import { useSwipeable } from 'react-swipeable'
 
 const ArrowView = styled('div')`
   position: absolute;
@@ -14,9 +15,14 @@ const ArrowView = styled('div')`
   height: ${(props) => props.size};
   color: ${(props) => props.theme.colors.light};
   cursor: pointer;
+  transition: ${(props) => props.theme.links.transition};
   left: ${(props) => (props.direction === 'left' ? '0.5rem' : 'auto')};
   right: ${(props) => (props.direction === 'right' ? '0.5rem' : 'auto')};
   opacity: ${(props) => (props.disabled ? '0.5' : '1.0')};
+
+  &:hover {
+    opacity: 0.5;
+  }
 `
 
 const Arrow = ({ direction, size, disabled, onClick }) => {
@@ -42,7 +48,7 @@ Arrow.propTypes = {
 
 const Dots = styled('div')`
   position: absolute;
-  z-index: 100;
+  z-index: 11;
   bottom: 0;
   left: 0;
   right: 0;
@@ -82,6 +88,11 @@ const SliderView = styled('div')`
   // display: flex;
 `
 
+const SliderSwipeWrapper = styled('div')`
+  display: flex;
+  height: 100%;
+`
+
 const Slide = styled('div')`
   position: absolute;
   z-index: ${(props) => props.index};
@@ -109,14 +120,14 @@ const defaultSettings = {
 
 const SliderNew = ({ settings = {}, slides }) => {
   const timer = useRef(null)
-  const slider = useRef()
+  const slider = useRef(null)
   const [pause, setPause] = useState(false)
   const [index, setIndex] = useState(0)
   const [lastIndex, setLastIndex] = useState(0)
   const {
     autoplay,
     transition,
-    transition_mobile,
+    // transition_mobile,
     duration,
     duration_mobile,
     show_arrows,
@@ -124,7 +135,7 @@ const SliderNew = ({ settings = {}, slides }) => {
     show_dots,
     show_dots_mobile,
   } = settings || defaultSettings
-  const transitionSpeed = isBrowser ? transition : transition_mobile
+  const transitionSpeed = isBrowser ? transition : 200
   const interval = isBrowser ? duration : duration_mobile
   const showArrows = isBrowser ? show_arrows : show_arrows_mobile
   const showDots = isBrowser ? show_dots : show_dots_mobile
@@ -137,6 +148,14 @@ const SliderNew = ({ settings = {}, slides }) => {
     (index > lastIndex && !(index === last && lastIndex === 0)) ||
     (index === 0 && lastIndex === last)
   const moveRight = !moveLeft
+
+  const config = {
+    delta: 10,
+    preventDefaultTouchmoveEvent: true,
+    trackTouch: true,
+    trackMouse: false,
+    rotationAngle: 0,
+  }
 
   useEffect(() => {
     if (autoplay) {
@@ -154,7 +173,7 @@ const SliderNew = ({ settings = {}, slides }) => {
   }, [index, count, interval, pause, autoplay])
 
   useEffect(() => {
-    if (autoplay) {
+    if (autoplay && slider.current) {
       slider.current.addEventListener('mouseover', () => {
         setPause(true)
       })
@@ -165,49 +184,57 @@ const SliderNew = ({ settings = {}, slides }) => {
   }, [slider, autoplay])
 
   const showSlide = (evt, idx) => {
-    evt.preventDefault()
-    evt.target.blur()
+    if (evt) {
+      evt.preventDefault()
+      evt.target.blur()
+    }
     if (idx >= 0 && idx <= count - 1) {
       setLastIndex(index)
       setIndex(idx)
     }
   }
 
+  const handlers = useSwipeable({
+    onSwipedLeft: () => showSlide(null, index === last ? 0 : index + 1),
+    onSwipedRight: () => showSlide(null, index === 0 ? last : index - 1),
+    ...config,
+  })
+
   return (
     <SliderView ref={slider}>
-      {slides.map((slide, idx) => {
-        const shift = idx === index ? 0 : idx === prevIndex ? -100 : 100
-        const active =
-          idx === index ||
-          (moveLeft && idx === prevIndex) ||
-          (moveRight && idx === nextIndex)
-        return (
-          <Slide
-            key={slide.imageUrl}
-            transition={transitionSpeed}
-            index={idx}
-            shift={shift}
-            active={active}
-          >
-            <BackgroundImage {...slide}>
-              <BackgroundContent {...slide} />
-            </BackgroundImage>
-          </Slide>
-        )
-      })}
+      <SliderSwipeWrapper {...handlers}>
+        {slides.map((slide, idx) => {
+          const shift = idx === index ? 0 : idx === prevIndex ? -100 : 100
+          const active =
+            idx === index ||
+            (moveLeft && idx === prevIndex) ||
+            (moveRight && idx === nextIndex)
+          return (
+            <Slide
+              key={slide.imageUrl}
+              transition={transitionSpeed}
+              index={idx}
+              shift={shift}
+              active={active}
+            >
+              <BackgroundImage {...slide}>
+                <BackgroundContent {...slide} />
+              </BackgroundImage>
+            </Slide>
+          )
+        })}
+      </SliderSwipeWrapper>
       {showArrows && (
         <>
           <Arrow
             direction="left"
             size={size}
             onClick={(evt) => showSlide(evt, index === 0 ? last : index - 1)}
-            // disabled={!autoplay && index === 0}
           />
           <Arrow
             direction="right"
             size={size}
             onClick={(evt) => showSlide(evt, index === last ? 0 : index + 1)}
-            // disabled={!autoplay && index === count - 1}
           />
         </>
       )}

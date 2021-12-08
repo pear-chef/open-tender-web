@@ -11,7 +11,7 @@ import { ButtonStyled, Message } from '@open-tender/components'
 import { Helmet } from 'react-helmet'
 
 import { maybeRefreshVersion } from '../../../app/version'
-import { selectAccountConfig, selectBrand, openModal } from '../../../slices'
+import { selectBrand, openModal, selectConfig } from '../../../slices'
 import {
   AccountBack,
   Content,
@@ -43,7 +43,7 @@ const AccountCreditCards = () => {
   const { windowRef } = useContext(AppContext)
   const { title: siteTitle, applePayMerchantId } = useSelector(selectBrand)
   const { auth } = useSelector(selectCustomer)
-  const account = useSelector(selectAccountConfig)
+  const { creditCards: config } = useSelector(selectConfig)
   const { entities, loading } = useSelector(selectCustomerCreditCards)
   const isLoading = loading === 'pending'
   const savedCards = entities.filter((i) => i.has_profile)
@@ -68,15 +68,15 @@ const AccountCreditCards = () => {
     <>
       <Helmet>
         <title>
-          {account.creditCards.title} | {siteTitle}
+          {config.title} | {siteTitle}
         </title>
       </Helmet>
       <Content>
-        <HeaderUser title={isBrowser ? null : account.creditCards.title} />
+        <HeaderUser />
         <Main>
           {!isBrowser && <AccountTabs />}
           <PageContainer style={{ maxWidth: '76.8rem' }}>
-            <PageTitle {...account.creditCards} preface={<AccountBack />}>
+            <PageTitle {...config} preface={<AccountBack />}>
               <PageTitleButtons>
                 <ButtonStyled
                   onClick={() => dispatch(openModal({ type: 'creditCard' }))}

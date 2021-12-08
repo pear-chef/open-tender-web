@@ -51,7 +51,7 @@ const VerifyAccount = ({ style }) => {
 }
 
 VerifyAccount.displayName = 'VerifyAccount'
-VerifyAccount.prototypes = {
+VerifyAccount.propTypes = {
   style: propTypes.object,
 }
 

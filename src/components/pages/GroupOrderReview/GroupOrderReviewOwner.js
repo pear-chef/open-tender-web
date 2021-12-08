@@ -175,7 +175,6 @@ const GroupOrderReviewOwner = () => {
     <>
       <Content>
         <Header
-          title={isBrowser ? null : 'Review Group Order'}
           left={<Menu />}
           right={
             <>

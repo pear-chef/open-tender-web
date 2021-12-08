@@ -12,9 +12,11 @@ import GiftCardAssignOther from './GiftCardAssignOther'
 import GroupOrder from './GroupOrder'
 import LevelUp from './LevelUp'
 import Login from './Login'
+import LoyaltyTier from './LoyaltyTier'
 import MenuItem from './MenuItem'
 import OrderRating from './OrderRating'
 import OrderType from './OrderType'
+import Points from './Points'
 import QRCode from './QRCode'
 import RequestedAt from './RequestedAt'
 import Reward from './Reward'
@@ -36,9 +38,11 @@ export {
   GroupOrder,
   LevelUp,
   Login,
+  LoyaltyTier,
   MenuItem,
   OrderRating,
   OrderType,
+  Points,
   QRCode,
   RequestedAt,
   Reward,

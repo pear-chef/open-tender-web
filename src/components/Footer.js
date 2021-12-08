@@ -88,7 +88,7 @@ const Footer = ({ hasRouter = true }) => {
             <ul>
               <li>
                 <a
-                  href="https://demo.brandibble.co/order/terms/"
+                  href="https://www.opentender.io/terms"
                   rel="noopener noreferrer"
                   target="_blank"
                 >
@@ -97,7 +97,7 @@ const Footer = ({ hasRouter = true }) => {
               </li>
               <li>
                 <a
-                  href="https://demo.brandibble.co/order/privacy/"
+                  href="https://www.opentender.io/privacy"
                   rel="noopener noreferrer"
                   target="_blank"
                 >

@@ -95,7 +95,7 @@ const Hero = ({
   vertical = 'BOTTOM',
   horizontal = 'CENTER',
   show_overlay = false,
-  text_color,
+  title_color,
   overlay_color,
   overlay_opacity,
   style = {},
@@ -108,7 +108,7 @@ const Hero = ({
       ? { ...style, backgroundImage: `url(${imageUrl}` }
       : null
   const theme = useSelector(selectTheme)
-  const loaderColor = `#${text_color}` || theme.bgColors.primary
+  const loaderColor = `#${title_color}` || theme.bgColors.primary
   const overlayColor = makeOverlayColor(overlay_color, overlay_opacity)
   const justifyContent = makeAlignment(horizontal)
   const alignItems = makeAlignment(vertical)
@@ -138,7 +138,7 @@ Hero.propTypes = {
   vertical: propTypes.string,
   horizontal: propTypes.string,
   show_overlay: propTypes.bool,
-  text_color: propTypes.string,
+  title_color: propTypes.string,
   overlay_color: propTypes.string,
   overlay_opacity: propTypes.number,
   style: propTypes.object,

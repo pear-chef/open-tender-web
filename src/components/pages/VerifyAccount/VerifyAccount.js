@@ -1,7 +1,6 @@
 import React, { useEffect, useContext } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import { isBrowser } from 'react-device-detect'
 import { Helmet } from 'react-helmet'
 import {
   selectCustomer,
@@ -61,7 +60,7 @@ const VerifyAccount = () => {
         </title>
       </Helmet>
       <Content>
-        <HeaderDefault title={isBrowser ? null : title} />
+        <HeaderDefault />
         <Main>
           <PageContainer>
             {success ? (

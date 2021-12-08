@@ -218,7 +218,7 @@ const Order = ({ order, loading, error, isConfirmation }) => {
                 {person_count && ` for ${person_count} people`}
               </p>
             ) : (
-              person_count && <p>30 people to be accommodated</p>
+              person_count && <p>{person_count} people to be accommodated</p>
             )}
             {serving_utensils && <p>Serving utensils included</p>}
             {tax_exempt_id && <p>Tax exempt ID of {tax_exempt_id}</p>}

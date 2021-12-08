@@ -2,7 +2,8 @@ import React, { useContext, useEffect, useRef } from 'react'
 import { Helmet } from 'react-helmet'
 import { useHistory } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import { isBrowser, deviceType } from 'react-device-detect'
+import styled from '@emotion/styled'
+import { deviceType } from 'react-device-detect'
 import {
   User,
   ShoppingBag,
@@ -18,6 +19,9 @@ import {
   Home,
   Coffee,
   Smartphone,
+  Star,
+  Heart,
+  Award,
 } from 'react-feather'
 import {
   selectCustomer,
@@ -39,7 +43,7 @@ import { CheckoutForm, FormError } from '@open-tender/components'
 
 import { maybeRefreshVersion } from '../../../app/version'
 import { cardIconMap } from '../../../assets/cardIcons'
-import { selectAPI, selectBrand, selectConfig } from '../../../slices'
+import { selectApi, selectBrand, selectConfig } from '../../../slices'
 import { AppContext } from '../../../App'
 import {
   Content,
@@ -66,6 +70,15 @@ const makeDeviceType = (deviceType) => {
   }
 }
 
+const CheckoutContainer = styled(PageContainer)`
+  padding: ${(props) => props.theme.layout.navHeight}
+    ${(props) => props.theme.layout.padding} 0;
+  @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
+    padding: ${(props) => props.theme.layout.navHeightMobile}
+      ${(props) => props.theme.layout.paddingMobile} 0;
+  }
+`
+
 const Checkout = () => {
   const formRef = useRef()
   const history = useHistory()
@@ -73,7 +86,7 @@ const Checkout = () => {
   const brand = useSelector(selectBrand)
   const { title, has_thanx } = brand
   const { checkout: config } = useSelector(selectConfig)
-  const api = useSelector(selectAPI)
+  const api = useSelector(selectApi)
   const cartTotal = useSelector(selectCartTotal)
   const menuSlug = useSelector(selectMenuSlug)
   const order = useSelector(selectOrder)
@@ -103,6 +116,10 @@ const Checkout = () => {
     house_account: <Home size={null} />,
     apple_pay: <Smartphone size={null} />,
     google_pay: <Smartphone size={null} />,
+    points: <Star size={null} />,
+    loyalty: <Heart size={null} />,
+    deal: <DollarSign size={null} />,
+    reward: <Award size={null} />,
   }
   const { windowRef } = useContext(AppContext)
   const deviceTypeName = makeDeviceType(deviceType)
@@ -158,14 +175,14 @@ const Checkout = () => {
         <title>Checkout | {title}</title>
       </Helmet>
       <Content>
-        <CheckoutHeader title={isBrowser ? null : 'Checkout'} />
+        <CheckoutHeader />
         <CheckoutTotal checkout={checkout} />
-        <Main style={{ padding: '12rem 0 0' }}>
-          <PageContainer>
+        <Main>
+          <CheckoutContainer>
             <PageTitle {...config} style={{ marginBottom: '0' }}>
               <CheckoutCancelEdit />
             </PageTitle>
-          </PageContainer>
+          </CheckoutContainer>
           {!check && (
             <PageContent style={{ marginTop: '0' }}>
               {formError ? (
@@ -175,7 +192,7 @@ const Checkout = () => {
               )}
             </PageContent>
           )}
-          <div ref={formRef} style={{ margin: '0 0 4rem' }}>
+          <div ref={formRef}>
             <CheckoutForm
               dispatch={dispatch}
               history={history}

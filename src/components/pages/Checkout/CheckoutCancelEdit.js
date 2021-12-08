@@ -6,7 +6,7 @@ import { selectOrder, resetOrder, resetCheckout } from '@open-tender/redux'
 import { ButtonLink } from '@open-tender/components'
 
 const CheckoutCancelView = styled('div')`
-  margin: 0 0 4rem;
+  margin: 3rem 0 0;
 
   p {
     line-height: ${(props) => props.theme.lineHeight};

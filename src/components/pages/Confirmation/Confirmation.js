@@ -1,7 +1,6 @@
 import React, { useContext, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import { isBrowser } from 'react-device-detect'
 import { Helmet } from 'react-helmet'
 import {
   selectCustomer,
@@ -70,10 +69,7 @@ const Confirmation = () => {
         <title>Confirmation | {brand.title}</title>
       </Helmet>
       <Content>
-        <HeaderDefault
-          title={isBrowser ? null : 'Confirmation'}
-          isLogo={false}
-        />
+        <HeaderDefault isLogo={false} />
         <Main>
           <PageContainer>
             <PageTitle {...config}>

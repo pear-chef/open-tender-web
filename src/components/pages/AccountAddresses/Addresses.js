@@ -98,8 +98,8 @@ const Addresses = ({ addresses, isLoading }) => {
 }
 
 Addresses.displayName = 'Addresses'
-Addresses.prototypes = {
+Addresses.propTypes = {
   addresses: propTypes.array,
-  isLoading: propTypes.boolean,
+  isLoading: propTypes.bool,
 }
 export default Addresses

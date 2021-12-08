@@ -14,7 +14,7 @@ import { AllergenForm, FormWrapper } from '@open-tender/components'
 import { Helmet } from 'react-helmet'
 
 import { maybeRefreshVersion } from '../../../app/version'
-import { selectAccountConfig, selectBrand } from '../../../slices'
+import { selectBrand, selectConfig } from '../../../slices'
 import { AppContext } from '../../../App'
 import {
   AccountBack,
@@ -45,7 +45,7 @@ const AccountAllergens = () => {
   const history = useHistory()
   const { title: siteTitle } = useSelector(selectBrand)
   const { auth } = useSelector(selectCustomer)
-  const account = useSelector(selectAccountConfig)
+  const { allergens: config } = useSelector(selectConfig)
   const brandAllergens = useSelector(selectAllergens)
   const customerAllergens = useSelector(selectCustomerAllergens)
   const isLoading =
@@ -79,15 +79,15 @@ const AccountAllergens = () => {
     <>
       <Helmet>
         <title>
-          {account.allergens.title} | {siteTitle}
+          {config.title} | {siteTitle}
         </title>
       </Helmet>
       <Content>
-        <HeaderUser title={isBrowser ? null : account.allergens.title} />
+        <HeaderUser />
         <Main>
           {!isBrowser && <AccountTabs />}
           <PageContainer style={{ maxWidth: '76.8rem' }}>
-            <PageTitle {...account.allergens} preface={<AccountBack />} />
+            <PageTitle {...config} preface={<AccountBack />} />
             <PageContent>
               {brandAllergens.entities.length ? (
                 <>

@@ -14,7 +14,7 @@ import {
   makeDisplayPrice,
   slugify,
 } from '@open-tender/js'
-import { Box, Heading, useBuilder } from '@open-tender/components'
+import { Box, Heading, Points, useBuilder } from '@open-tender/components'
 
 import {
   selectDisplaySettings,
@@ -28,6 +28,7 @@ import { MenuContext } from './Menu'
 import { MenuItemButton, MenuItemImage } from '.'
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
 import { Plus } from 'react-feather'
+import { isBrowser } from 'react-device-detect'
 
 const MenuItemView = styled('div')`
   position: relative;
@@ -72,6 +73,7 @@ export const MenuItemOverlay = styled('div')`
   bottom: 0;
   left: 0;
   right: 0;
+  padding: 0 0.5rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -86,65 +88,98 @@ export const MenuItemOverlay = styled('div')`
 const MenuItemAdd = styled('button')`
   position: absolute;
   z-index: 3;
-  top: -1.3rem;
-  right: -1.2rem;
+  bottom: 1.1rem;
+  right: 1.2rem;
   display: flex;
   justify-content: center;
   align-items: center;
   width: 2.6rem;
   height: 2.6rem;
-  border-radius: 1.3em;
-  padding: 0.3rem;
-  border-width: 0.2rem;
-  border-style: solid;
-  color: ${(props) => props.theme.colors.light};
-  background-color: ${(props) => props.theme.colors.primary};
-  border-color: ${(props) => props.theme.colors.light};
   @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
-    top: -0.9rem;
-    right: -0.8rem;
-    width: 2.2rem;
-    height: 2.2rem;
-    padding: 0.2rem 0.2rem;
+    bottom: 0.6rem;
+    right: 0.6rem;
+    width: 2.8rem;
+    height: 3.2rem;
+    align-items: flex-end;
+  }
+
+  span {
+    display: block;
+    width: 2.6rem;
+    height: 2.6rem;
+    border-radius: 1.3rem;
+    padding: 0.2rem;
+    border-width: 0.2rem;
+    border-style: solid;
+    transition: ${(props) => props.theme.links.transition};
+    color: ${(props) => props.theme.colors.primary};
+    background-color: transparent;
+    border-color: ${(props) => props.theme.colors.primary};
+    @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
+      width: 2.8rem;
+      height: 2.8rem;
+      border-radius: 1.4rem;
+      padding: 0.2rem;
+      border-width: 0.2rem;
+    }
   }
 
   &:hover:enabled,
-  &:active:enabled,
-  &:focus:enabled {
-    background-color: ${(props) => props.theme.links.primary.color};
+  &:active:enabled {
+    span {
+      color: ${(props) => props.theme.colors.light};
+      background-color: ${(props) => props.theme.colors.primary};
+      @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
+        color: ${(props) => props.theme.colors.primary};
+        background-color: transparent;
+      }
+    }
   }
 
   &:disabled {
-    background-color: ${(props) => props.theme.colors.primary};
-    opacity: 0.5;
+    span {
+      background-color: transparent;
+      opacity: 0.5;
+    }
   }
 `
 
 const MenuItemCount = styled('div')`
   position: absolute;
   z-index: 3;
-  top: -1.3rem;
-  left: -1.2rem;
+  top: -1.1rem;
+  right: -1.1rem;
   display: flex;
   justify-content: center;
   align-items: center;
-  min-width: 2.6rem;
-  height: 2.6rem;
-  border-radius: 1.3em;
-  padding-bottom: 0.1rem;
-  border-width: 0.2rem;
+  min-width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 1.2rem;
   border-style: solid;
-  color: ${(props) => props.theme.colors.light};
-  background-color: ${(props) => props.theme.colors.error};
-  border-color: ${(props) => props.theme.colors.light};
-  font-weight: ${(props) => props.theme.boldWeight};
-  font-size: ${(props) => props.theme.fonts.sizes.small};
+  border-width: ${(props) => props.theme.counts.alerts.borderWidth};
+  padding-top: ${(props) => props.theme.counts.alerts.paddingTop};
+  padding-bottom: ${(props) => props.theme.counts.alerts.paddingBottom};
+  color: ${(props) => props.theme.counts.alerts.color};
+  background-color: ${(props) => props.theme.counts.alerts.bgColor};
+  border-color: ${(props) => props.theme.counts.alerts.borderColor};
   @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
-    top: -0.9rem;
-    left: -0.8rem;
-    min-width: 2.1rem;
-    height: 2.1rem;
-    font-size: ${(props) => props.theme.fonts.sizes.xSmall};
+    top: -1rem;
+    right: -0.9rem;
+    min-width: 2.2rem;
+    height: 2.2rem;
+  }
+
+  span {
+    display: block;
+    line-height: 0;
+    font-family: ${(props) => props.theme.counts.alerts.family};
+    font-weight: ${(props) => props.theme.counts.alerts.weight};
+    font-size: ${(props) => props.theme.counts.alerts.fontSize};
+    -webkit-font-smoothing: ${(props) =>
+      props.theme.counts.alerts.fontSmoothing};
+    @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
+      font-size: ${(props) => props.theme.counts.alerts.fontSizeMobile};
+    }
   }
 `
 
@@ -160,7 +195,8 @@ const MenuItemAlert = styled('div')`
 `
 
 const MenuItemContent = styled('div')`
-  padding: 1.2rem 1.4rem 0.9rem;
+  position: relative;
+  padding: 1.5rem 1.5rem 1rem;
   @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
     padding: 0.9rem 0.9rem 0.6rem;
   }
@@ -185,13 +221,15 @@ const MenuItemDescription = styled('p')`
 `
 
 const MenuItemDetails = styled('p')`
-  margin: 0.5rem 0 0;
+  padding: ${(props) => (props.showQuickAdd ? '0 3rem 0 0' : '0')};
+  margin: 1rem 0 0;
   line-height: ${(props) => props.theme.lineHeight};
   @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
+    padding: ${(props) => (props.showQuickAdd ? '0 2rem 0 0' : '0')};
     margin: 0.3rem 0 0;
   }
 
-  span {
+  & > span {
     display: inline-block;
     margin: 0 1.5rem 0 0;
     @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
@@ -241,13 +279,16 @@ const MenuItemTags = styled('span')`
 const MenuItem = ({ item }) => {
   const dispatch = useDispatch()
   const history = useHistory()
-  const { soldOut, menuConfig, allergenAlerts } = useContext(MenuContext)
+  const { soldOut, menuConfig, allergenAlerts, pointsProgram } =
+    useContext(MenuContext)
   const {
     menuImages: showImage,
     calories: showCals,
     tags: showTags,
     allergens: showAllergens,
     builderType,
+    quickAdd = true,
+    quickAddMobile = true,
   } = useSelector(selectDisplaySettings)
   const menuSlug = useSelector(selectMenuSlug)
   const soldOutMsg = menuConfig.soldOutMessage || 'Sold out for day'
@@ -258,6 +299,7 @@ const MenuItem = ({ item }) => {
     item.small_image_url || item.app_image_url || item.big_image_url
   const imageUrl = showImage ? smallImg : null
   const price = makeDisplayPrice(item)
+  const points = pointsProgram && item.points
   const cals =
     showCals && item.nutritional_info
       ? parseInt(item.nutritional_info.calories) || null
@@ -273,6 +315,8 @@ const MenuItem = ({ item }) => {
   const groupsBelowMin = groups.filter((g) => g.quantity < g.min).length > 0
   const isIncomplete =
     totalPrice === 0 || item.quantity === '' || groupsBelowMin
+  const hasQuickAdd = isBrowser ? quickAdd : quickAddMobile
+  const showQuickAdd = hasQuickAdd && !isIncomplete && !isSoldOut
 
   const view = (evt) => {
     evt.preventDefault()
@@ -313,12 +357,11 @@ const MenuItem = ({ item }) => {
   return (
     <MenuItemView>
       <MenuItemContainer>
-        {!isIncomplete && !isSoldOut && (
-          <MenuItemAdd onClick={add} disabled={isIncomplete}>
-            <Plus size={16} />
-          </MenuItemAdd>
+        {cartCount > 0 && (
+          <MenuItemCount>
+            <span>{cartCount}</span>
+          </MenuItemCount>
         )}
-        {cartCount > 0 && <MenuItemCount>{cartCount}</MenuItemCount>}
         {!showImage && itemTag ? (
           <MenuItemAlert>{itemTag}</MenuItemAlert>
         ) : null}
@@ -339,9 +382,10 @@ const MenuItem = ({ item }) => {
             {item.description && (
               <MenuItemDescription>{item.description}</MenuItemDescription>
             )}
-            <MenuItemDetails>
+            <MenuItemDetails showQuickAdd={showQuickAdd}>
               {price && <MenuItemPrice>{price}</MenuItemPrice>}
               {cals && <MenuItemCals>{cals} cals</MenuItemCals>}
+              {points && <Points points={points} icon={iconMap.Star} />}
               {allergens.length > 0 && (
                 <MenuItemAllergens>{allergens.join(', ')}</MenuItemAllergens>
               )}
@@ -351,6 +395,13 @@ const MenuItem = ({ item }) => {
             </MenuItemDetails>
           </MenuItemContent>
         </MenuItemButton>
+        {showQuickAdd && (
+          <MenuItemAdd onClick={add} disabled={isIncomplete} title="Quick Add">
+            <span>
+              <Plus size={18} />
+            </span>
+          </MenuItemAdd>
+        )}
       </MenuItemContainer>
     </MenuItemView>
   )

@@ -16,6 +16,7 @@ const BackgroundLoadingView = styled('div')`
   justify-content: center;
   align-items: center;
   z-index: ${(props) => props.zIndex || 1};
+  background-color: ${(props) => props.theme.bgColors.tertiary};
 `
 
 const BackgroundLoading = ({ zIndex = null, color = null }) => {

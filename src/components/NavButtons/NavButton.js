@@ -13,11 +13,14 @@ const NavButtonView = styled('button')`
   line-height: 1;
   padding: 2rem 2rem 2rem 2.5rem;
   margin: 0 0 1rem;
+  font-size: ${(props) => props.theme.fonts.sizes.big};
+  // font-family: ${(props) => props.theme.fonts.headings.family};
+  // font-weight: ${(props) => props.theme.fonts.headings.weight};
+  font-weight: ${(props) => props.theme.boldWeight};
   color: ${(props) => props.theme.fonts.headings.color};
   transition: ${(props) => props.theme.links.transition};
   opacity: 0;
   animation: slide-up 0.25s ease-in-out ${(props) => props.delay} forwards;
-  font-size: ${(props) => props.theme.fonts.sizes.big};
   border-style: solid;
   border-width: ${(props) => props.theme.border.width};
   border-color: ${(props) => props.theme.border.color};

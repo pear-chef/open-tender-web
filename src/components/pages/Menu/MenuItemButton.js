@@ -9,11 +9,10 @@ const MenuItemButton = styled('button')`
   background-color: transparent;
   opacity: 1;
   transition: all 0.15s ease;
-  // font-size: ${(props) => props.theme.fonts.sizes.main};
 
-  &:hover,
-  &:active,
-  &:focus {
+  &:hover:enabled,
+  &:active:enabled,
+  &:focus:enabled {
     opacity: ${(props) => (props.isSoldOut ? '1.0' : '0.8')};
   }
 `

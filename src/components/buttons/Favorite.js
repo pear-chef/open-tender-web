@@ -16,9 +16,18 @@ const FavoriteView = styled('button')`
   width: ${(props) => props.theme.favorite.size};
   height: ${(props) => props.theme.favorite.size};
   border-radius: ${(props) => props.theme.favorite.size};
-  color: ${(props) => props.theme.buttons.colors[props.bgColor].color};
+  color: ${(props) => props.theme.buttons.colors[props.color].color};
   background-color: ${(props) =>
-    props.theme.buttons.colors[props.bgColor].bgColor};
+    props.theme.buttons.colors[props.color].bgColor};
+
+  &:hover,
+  &:active,
+  &:focus {
+    color: ${(props) =>
+      props.theme.buttons.colors[`${props.color}Hover`].color};
+    background-color: ${(props) =>
+      props.theme.buttons.colors[`${props.color}Hover`].bgColor};
+  }
 `
 
 const FavoriteIcon = styled('span')`
@@ -47,7 +56,7 @@ const Favorite = ({ item, favoriteId }) => {
   return (
     <FavoriteView
       onClick={favoriteId ? handleRemove : handleAdd}
-      bgColor={favoriteId ? 'cart' : 'primary'}
+      color={favoriteId ? 'secondary' : 'primary'}
       aria-label={favoriteId ? 'Remove favorite' : 'Add favorite'}
     >
       <FavoriteIcon>{iconMap.Heart}</FavoriteIcon>

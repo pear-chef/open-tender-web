@@ -1,6 +1,8 @@
 import React from 'react'
 import propTypes from 'prop-types'
 import styled from '@emotion/styled'
+import { openModal } from '../slices'
+import { useDispatch } from 'react-redux'
 
 const ProgressView = styled('div')`
   position: relative;
@@ -29,6 +31,69 @@ const ProgressPoint = styled('div')`
   background-color: ${(props) => props.theme.links.primary.color};
 `
 
+const ProgressPointContainer = styled('div')`
+  position: relative;
+  width: 100%;
+  height: 100%;
+`
+
+const ProgressPointButton = styled('button')`
+  position: absolute;
+  z-index: 1;
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 1.2rem;
+  text-indent: -5000px;
+
+  &:hover ~ div {
+    opacity: 1;
+    visiblity: visible;
+    transform: translateY(0);
+  }
+`
+
+const ProgressPointHover = styled('div')`
+  position: absolute;
+  bottom: 125%;
+  left: 0;
+  width: 16rem;
+  height: 10rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  transition: all 250ms ease;
+  opacity: 0;
+  visiblity: hidden;
+  transform: translateY(1rem);
+  @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
+    display: none;
+  }
+
+  & > span {
+    display: block;
+    background-color: ${(props) => props.theme.bgColors.primary};
+    margin: 0 auto;
+    padding: 1rem 2rem;
+    box-shadow: ${(props) => props.theme.boxShadow.outer};
+    text-align: center;
+
+    & > span {
+      display: block;
+
+      &:first-of-type {
+        color: ${(props) => props.color};
+        font-size: ${(props) => props.theme.fonts.sizes.small};
+        margin: 0 0 0.5rem;
+      }
+
+      &:last-of-type {
+        font-size: ${(props) => props.theme.fonts.sizes.xSmall};
+      }
+    }
+  }
+`
+
 const ProgressAmount = styled('div')`
   position: absolute;
   top: 2.2rem;
@@ -38,25 +103,47 @@ const ProgressAmount = styled('div')`
   font-size: ${(props) => props.theme.fonts.sizes.xSmall};
 `
 
-const ProgressBar = ({ progress, points = [] }) => {
+const ProgressBar = ({ progress, tiers = [] }) => {
+  const dispatch = useDispatch()
   const style = { width: `${progress || 0}%` }
+
+  const showTier = (evt, tier) => {
+    evt.preventDefault()
+    dispatch(openModal({ type: 'loyaltyTier', args: { tier } }))
+  }
+
   return (
     <ProgressView>
       <div style={style}>
         <ProgressBarFill />
       </div>
-      {points.map((point) => (
+      {tiers.map((tier) => (
         <ProgressPoint
-          key={point.percentage}
-          style={{ left: `${point.percentage.toFixed(5)}%` }}
-        />
-      ))}
-      {points.map((point) => (
-        <ProgressAmount
-          key={point.percentage}
-          style={{ left: `${point.percentage.toFixed(5)}%` }}
+          key={tier.percentage}
+          style={{
+            left: `${tier.percentage.toFixed(5)}%`,
+            backgroundColor: tier.color,
+          }}
         >
-          {point.value}
+          <ProgressPointContainer>
+            <ProgressPointButton onClick={(evt) => showTier(evt, tier)}>
+              {tier.name}
+            </ProgressPointButton>
+            <ProgressPointHover color={tier.color}>
+              <span>
+                <span>{tier.name} Tier</span>
+                <span>Click for details</span>
+              </span>
+            </ProgressPointHover>
+          </ProgressPointContainer>
+        </ProgressPoint>
+      ))}
+      {tiers.map((tier) => (
+        <ProgressAmount
+          key={tier.percentage}
+          style={{ left: `${tier.percentage.toFixed(5)}%` }}
+        >
+          {tier.value}
         </ProgressAmount>
       ))}
     </ProgressView>

@@ -42,8 +42,9 @@ const BackgroundContentText = styled('div')`
   }
 
   p + p {
+    max-width: 64rem;
+    margin: 2rem auto 0;
     line-height: 1.2;
-    margin: 2rem 0 0;
     font-size: ${(props) => props.theme.fonts.sizes.h3};
     @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
       margin: 1rem 0 0;
@@ -68,15 +69,17 @@ const makeAlignment = (alignment) => {
 const BackgroundContent = ({
   title,
   subtitle,
-  text_color = 'ffffff',
+  title_color = 'ffffff',
+  subtitle_color = 'ffffff',
   vertical = 'BOTTOM',
   horizontal = 'CENTER',
+  hide_text = false,
 }) => {
   if (!title && !subtitle) return null
   const justifyContent = makeAlignment(horizontal)
   const alignItems = makeAlignment(vertical)
 
-  return (
+  return hide_text ? null : (
     <BackgroundContentView
       justifyContent={justifyContent}
       alignItems={alignItems}
@@ -84,11 +87,11 @@ const BackgroundContent = ({
     >
       <BackgroundContentText>
         {title && (
-          <Heading as="p" style={{ color: `#${text_color}` }}>
+          <Heading as="p" style={{ color: `#${title_color}` }}>
             {title}
           </Heading>
         )}
-        {subtitle && <p style={{ color: `#${text_color}` }}>{subtitle}</p>}
+        {subtitle && <p style={{ color: `#${subtitle_color}` }}>{subtitle}</p>}
       </BackgroundContentText>
     </BackgroundContentView>
   )
@@ -98,7 +101,8 @@ BackgroundContent.displayName = 'BackgroundContent'
 BackgroundContent.propTypes = {
   title: propTypes.string,
   subtitle: propTypes.string,
-  text_color: propTypes.string,
+  title_color: propTypes.string,
+  subtitle_color: propTypes.string,
   vertical: propTypes.string,
   horizontal: propTypes.string,
 }

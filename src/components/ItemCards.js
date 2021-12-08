@@ -5,6 +5,7 @@ import styled from '@emotion/styled'
 const ItemCardsView = styled('div')`
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   margin: 0 -0.5rem;
   opacity: 0;
   animation: slide-up 0.25s ease-in-out 0.25s forwards;

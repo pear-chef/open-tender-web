@@ -51,10 +51,20 @@ const GroupOrderShare = () => {
             Change your mind? Save this order for later or cancel it altogether.
           </p>
           <div>
-            <ButtonStyled icon={iconMap.Save} onClick={save} size="small">
+            <ButtonStyled
+              icon={iconMap.Save}
+              onClick={save}
+              color="secondary"
+              size="small"
+            >
               Save for Later
             </ButtonStyled>
-            <ButtonStyled icon={iconMap.Trash2} onClick={cancel} size="small">
+            <ButtonStyled
+              icon={iconMap.Trash2}
+              onClick={cancel}
+              color="secondary"
+              size="small"
+            >
               Delete Forever
             </ButtonStyled>
           </div>

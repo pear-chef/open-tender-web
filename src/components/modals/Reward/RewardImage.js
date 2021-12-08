@@ -74,7 +74,7 @@ const RewardImage = ({ src, alt }) => {
 }
 
 RewardImage.displayName = 'RewardImage'
-RewardImage.prototypes = {
+RewardImage.propTypes = {
   src: propTypes.string,
   alt: propTypes.string,
 }

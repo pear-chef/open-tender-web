@@ -45,7 +45,7 @@ const RevenueCenterContent = styled('div')`
   }
 
   > div {
-    padding: 1.5rem 2rem;
+    padding: 1.5rem 2rem 2rem;
     @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
       padding: 1.5rem 1.5rem;
     }
@@ -57,7 +57,7 @@ const RevenueCenterHeader = styled('div')`
   justify-content: space-between;
   align-items: baseline;
   flex-wrap: wrap;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
     margin-bottom: 1rem;
   }

@@ -3,13 +3,13 @@ import { useSelector, useDispatch } from 'react-redux'
 import { selectCustomer, fetchCustomerCreditCards } from '@open-tender/redux'
 import { AuthApplePay, Message } from '@open-tender/components'
 
-import { closeModal, selectAPI, selectBrand } from '../../slices'
+import { closeModal, selectApi, selectBrand } from '../../slices'
 import { Loading, ModalContent, ModalView } from '..'
 
 const CreditCardLinked = () => {
   const dispatch = useDispatch()
   const brand = useSelector(selectBrand)
-  const api = useSelector(selectAPI)
+  const api = useSelector(selectApi)
   const { profile } = useSelector(selectCustomer)
   const { customer_id } = profile || {}
   const callback = useCallback(() => {

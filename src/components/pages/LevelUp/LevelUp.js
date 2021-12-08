@@ -1,5 +1,4 @@
 import React, { useContext, useEffect } from 'react'
-import { isBrowser } from 'react-device-detect'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation, useParams, useHistory } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
@@ -75,7 +74,7 @@ const LevelUp = () => {
         <title>LevelUp | {siteTitle}</title>
       </Helmet>
       <Content>
-        <HeaderDefault title={isBrowser ? null : 'LevelUp'} />
+        <HeaderDefault />
         <Main>
           <PageContainer style={{ maxWidth: '76.8rem' }}>
             <PageTitle title={title} subtitle={subtitle} />

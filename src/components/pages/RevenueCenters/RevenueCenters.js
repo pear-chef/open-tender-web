@@ -1,8 +1,9 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useHistory, useLocation } from 'react-router-dom'
 import { isMobile } from 'react-device-detect'
 import { Helmet } from 'react-helmet'
+import { animateScroll as scroll } from 'react-scroll'
 import ClipLoader from 'react-spinners/ClipLoader'
 import {
   selectOrder,
@@ -17,7 +18,7 @@ import {
   selectBrand,
   selectSettings,
   selectGeoLatLng,
-  selectConfig,
+  selectHeaderHeight,
 } from '../../../slices'
 import { AppContext } from '../../../App'
 import {
@@ -41,7 +42,11 @@ const RevenueCenters = () => {
   const dispatch = useDispatch()
   const [activeMarker, setActiveMarker] = useState(null)
   const { title: siteTitle } = useSelector(selectBrand)
-  const { revenueCenters: config } = useSelector(selectConfig)
+  const headerHeight = useSelector(selectHeaderHeight)
+  const offset = headerHeight + 20
+  // const { revenueCenters: config } = useSelector(selectConfig)
+  // const navTitle =
+  //   config.title && config.title.length < 20 ? config.title : 'Find a Store'
   const { orderType, serviceType, address } = useSelector(selectOrder)
   const { googleMaps } = useSelector(selectSettings)
   const { apiKey, defaultCenter, zoom, styles, icons } = googleMaps
@@ -55,8 +60,7 @@ const RevenueCenters = () => {
   const query = new URLSearchParams(useLocation().search)
   const param = query.get('type')
   const { windowRef } = useContext(AppContext)
-  const navTitle =
-    config.title && config.title.length < 20 ? config.title : 'Find a Store'
+  const missingAddress = serviceType === 'DELIVERY' && !address
 
   useEffect(() => {
     windowRef.current.scrollTop = 0
@@ -75,6 +79,34 @@ const RevenueCenters = () => {
     if (!hasTypes && !paramOrderType) history.push('/')
   }, [hasTypes, param, dispatch, history])
 
+  const setActive = useCallback(
+    (revenueCenter) => {
+      if (revenueCenter) {
+        const { revenue_center_id, address, slug } = revenueCenter
+        setActiveMarker(revenue_center_id)
+        setCenter({ lat: address.lat, lng: address.lng })
+        const element = document.getElementById(slug)
+        if (element) {
+          const position = element.offsetTop + offset
+          scroll.scrollTo(position, {
+            container: windowRef.current,
+            duration: 500,
+            smooth: true,
+            offset: 0,
+          })
+        }
+      } else {
+        // windowRef.current.scrollTop = 0
+        setActiveMarker(null)
+        const newCenter = address
+          ? { lat: address.lat, lng: address.lng }
+          : geoLatLng || defaultCenter
+        setCenter(newCenter)
+      }
+    },
+    [address, defaultCenter, geoLatLng, windowRef, offset]
+  )
+
   return (
     <>
       <Helmet>
@@ -85,7 +117,6 @@ const RevenueCenters = () => {
           maxWidth="76.8rem"
           borderColor={isMobile ? 'transparent' : 'primary'}
           style={{ boxShadow: 'none' }}
-          title={isMobile ? navTitle : null}
           left={
             orderType === 'CATERING' ? (
               <Back text="Catering" onClick={() => history.push('/catering')} />
@@ -136,13 +167,13 @@ const RevenueCenters = () => {
                     icon={icon.url}
                     size={icon.size}
                     anchor={icon.anchor}
-                    events={{
-                      onClick: () => setActiveMarker(i.revenue_center_id),
-                    }}
+                    events={
+                      missingAddress ? {} : { onClick: () => setActive(i) }
+                    }
                   />
                 )
               })}
-              {address && (
+              {(address || geoLatLng) && (
                 <GoogleMapsMarker
                   title="Your Location"
                   position={{

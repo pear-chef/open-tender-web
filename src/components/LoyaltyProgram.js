@@ -1,9 +1,9 @@
 import React from 'react'
 import propTypes from 'prop-types'
 import styled from '@emotion/styled'
-import { loyaltyType, formatDollars } from '@open-tender/js'
+import { loyaltyType, formatDollars, formatQuantity } from '@open-tender/js'
 import { Box, Heading, Text } from '@open-tender/components'
-import { ProgressBar, ProgressCircle } from '.'
+import { PointsBalance, ProgressBar, ProgressCircle } from '.'
 
 const LoyaltyProgramView = styled(Box)`
   margin: 0 auto;
@@ -27,8 +27,8 @@ const LoyaltyProgramSummary = styled('div')`
   justify-content: space-between;
   padding: 0 6rem 2.5rem 0;
   @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
-    padding: 0 0 2.5rem;
-    margin: 0 0 3rem;
+    padding: 0;
+    // margin: 0 0 3rem;
   }
 
   & > div:first-of-type {
@@ -40,7 +40,7 @@ const LoyaltyProgramHeader = styled('div')`
   margin: 0 0 1.5rem;
 
   h2 {
-    font-size: ${(props) => props.theme.fonts.sizes.h5};
+    font-size: ${(props) => props.theme.fonts.sizes.h4};
   }
 
   p {
@@ -61,6 +61,9 @@ const LoyaltyProgramCredit = styled('div')`
 const LoyaltyProgramStatus = styled('div')`
   flex-grow: 0;
   margin: 1rem 0 0;
+  @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
+    margin: 1rem 0 3.5rem;
+  }
 `
 
 const LoyaltyProgramStatusHeader = styled('div')`
@@ -73,8 +76,13 @@ const LoyaltyProgramStatusHeader = styled('div')`
 `
 
 const LoyaltyProgramProgress = styled('div')`
-  flex: 0 0 16rem;
-  // width: 16rem;
+  flex-grow: 0;
+  flex-shrink: 0;
+  width: 20rem;
+  @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
+    width: 100%;
+    margin: 1rem 0 0;
+  }
 
   & > div {
     margin: 1rem auto;
@@ -91,6 +99,18 @@ const LoyaltyProgramProgress = styled('div')`
   p:last-of-type {
     line-height: 1.4;
     font-size: ${(props) => props.theme.fonts.sizes.small};
+  }
+`
+
+const LoyaltyProgramPoints = styled('div')`
+  flex-grow: 0;
+  flex-shrink: 0;
+  width: 20rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
+    width: 100%;
   }
 `
 
@@ -121,18 +141,29 @@ const LoyaltyProgramProgress = styled('div')`
 //   progress: 1500,
 // }
 
-const makeStatus = (tiers, status, isDollars = true) => {
+const makeStatus = (tiers, status, points) => {
   if (!tiers) return null
   const highest = tiers[tiers.length - 1].threshold
   const total = highest * 1.2
-  const progress = (status.progress / total) * 100
-  const points = tiers.map((i) => ({
+  const progress = Math.min((status.progress / total) * 100, 100)
+  const progressTiers = tiers.map((i) => ({
+    ...i,
+    points,
     percentage: (i.threshold / total) * 100,
-    value: isDollars
+    color: `#${i.hex_code}`,
+    value: !points
       ? `${formatDollars(i.threshold, '', 0)}`
-      : `${parseInt(i.threshold)}`,
+      : `${formatQuantity(i.threshold)}`,
   }))
-  return { progress, points }
+  const daysMsg =
+    status.days === 7300 ? 'all-time' : `in the last ${status.days} days`
+  const progressAmt = !points
+    ? formatDollars(status.progress, '', 0)
+    : formatQuantity(status.progress)
+  const progressMsg = !points
+    ? `${progressAmt} spent ${daysMsg}`
+    : `${progressAmt} ${points.name.toLowerCase()} earned ${daysMsg}`
+  return { progress, progressMsg, tiers: progressTiers }
 }
 
 const makeProgress = (loyalty_type, spend, redemption) => {
@@ -151,6 +182,7 @@ const LoyaltyProgram = ({ program, isLoading = false }) => {
     name,
     description,
     loyalty_type,
+    points,
     spend,
     redemption,
     credit,
@@ -164,7 +196,8 @@ const LoyaltyProgram = ({ program, isLoading = false }) => {
     progress || makeProgress(loyalty_type, spend, redemption)
   const currentCredit = credit ? parseFloat(credit.current) : 0
   const hasCredit = currentCredit > 0
-  const currentStatus = tiers && status ? makeStatus(tiers, status) : null
+  const currentStatus =
+    tiers && status ? makeStatus(tiers, status, points) : null
 
   return (
     <LoyaltyProgramView>
@@ -181,35 +214,40 @@ const LoyaltyProgram = ({ program, isLoading = false }) => {
               </Text>
               <p>Apply to your next order when you checkout.</p>
             </LoyaltyProgramCredit>
-          ) : (
+          ) : !points ? (
             <LoyaltyProgramCredit>
               <Text color="primary" bold={true} as="p">
                 $0.00 credit balance
               </Text>
               <p>Make progress towards your next credit with every order.</p>
             </LoyaltyProgramCredit>
-          )}
+          ) : null}
         </div>
         {currentStatus && (
           <LoyaltyProgramStatus>
             <LoyaltyProgramStatusHeader>
-              <p>
-                You're currently at{' '}
-                <Text color="primary" bold={true}>
-                  {status.name}
-                </Text>{' '}
-                status
-              </p>
-              <p>
-                {formatDollars(status.progress, '', 0)} spent in the last 365
-                days
-              </p>
+              {status.tier ? (
+                <p>
+                  You're currently at{' '}
+                  <Text
+                    color="primary"
+                    bold={true}
+                    style={{ color: `#${status.tier.hex_code}` }}
+                  >
+                    {status.tier.name}
+                  </Text>{' '}
+                  status
+                </p>
+              ) : currentStatus.progress ? (
+                <p>You're making progress!</p>
+              ) : null}
+              <p>{currentStatus.progressMsg}</p>
             </LoyaltyProgramStatusHeader>
             <ProgressBar {...currentStatus} />
           </LoyaltyProgramStatus>
         )}
       </LoyaltyProgramSummary>
-      {!!currentProgress && (
+      {!!currentProgress ? (
         <LoyaltyProgramProgress>
           <Heading as="p">Current Progress</Heading>
           <ProgressCircle progress={currentProgress} isLoading={isLoading} />
@@ -223,7 +261,11 @@ const LoyaltyProgram = ({ program, isLoading = false }) => {
             <p>Make your first purchase to start earning rewards!</p>
           )}
         </LoyaltyProgramProgress>
-      )}
+      ) : points ? (
+        <LoyaltyProgramPoints>
+          <PointsBalance {...points} />
+        </LoyaltyProgramPoints>
+      ) : null}
     </LoyaltyProgramView>
   )
 }

@@ -19,8 +19,7 @@ const AccountTabsView = styled('div')`
   justify-content: space-between;
   align-items: center;
   background-color: ${(props) => props.theme.bgColors.primary};
-  border-top: 0.1rem solid ${(props) => props.theme.bgColors.secondary};
-  // border-top: 0.1rem solid #d4dce8;
+  border-top: 0.1rem solid ${(props) => props.theme.border.color};
   max-width: ${(props) => props.maxWidth};
   height: ${(props) => props.theme.layout.navHeight};
   @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {

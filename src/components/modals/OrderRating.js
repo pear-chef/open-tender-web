@@ -3,7 +3,6 @@ import propTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
 import { updateCustomerOrderRating } from '@open-tender/redux'
 import { OrderRatingForm } from '@open-tender/components'
-
 import { closeModal } from '../../slices'
 import { ModalContent, ModalView } from '..'
 import iconMap from '../iconMap'

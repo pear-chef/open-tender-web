@@ -11,6 +11,8 @@ import {
   selectSelectedAllergenNames,
   showNotification,
   selectGroupOrder,
+  selectOrder,
+  selectCustomerPointsProgram,
 } from '@open-tender/redux'
 import { Builder, BuilderOption, BuilderHeader } from '@open-tender/components'
 
@@ -55,6 +57,9 @@ const MenuItem = () => {
   const soldOut = useSelector(selectSoldOut)
   const allergens = useSelector(selectSelectedAllergenNames)
   const displaySettings = useSelector(selectDisplaySettings)
+  const { orderType } = useSelector(selectOrder)
+  const pointsProgram = useSelector(selectCustomerPointsProgram(orderType))
+  const pointsIcon = pointsProgram ? iconMap.Star : null
   const { cartId } = useSelector(selectGroupOrder)
 
   const cancel = () => {
@@ -91,6 +96,7 @@ const MenuItem = () => {
             closeModal={cancel}
             cartId={cartId}
             spinner={<ImageSpinner />}
+            pointsIcon={pointsIcon}
           />
         )}
       </MenuItemModalContent>

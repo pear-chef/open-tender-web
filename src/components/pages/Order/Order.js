@@ -55,7 +55,7 @@ const Order = () => {
         </title>
       </Helmet>
       <Content>
-        <HeaderUser title={isMobile ? title : null} />
+        <HeaderUser />
         <Main>
           {isMobile && <AccountTabs />}
           <PageContainer>

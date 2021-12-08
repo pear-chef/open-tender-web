@@ -60,6 +60,7 @@ const MenuItemBuilder = ({
   allergenAlerts,
   displaySettings,
   cartId,
+  hasPoints,
 }) => {
   const {
     item,
@@ -72,12 +73,16 @@ const MenuItemBuilder = ({
     incrementOption,
     decrementOption,
     setOptionQuantity,
-  } = useBuilder(menuItem, soldOut)
+  } = useBuilder(menuItem, soldOut, hasPoints)
   const headerDisplaySettings = { ...displaySettings, builderImages: false }
   return (
     <MenuItemBuilderView>
       <MenuItemBuilderContent>
-        <BuilderHeader item={item} displaySettings={headerDisplaySettings} />
+        <BuilderHeader
+          item={item}
+          displaySettings={headerDisplaySettings}
+          pointsIcon={hasPoints ? iconMap.Star : null}
+        />
         <BuilderBody
           allergens={allergenAlerts}
           renderOption={(props) => <BuilderOption {...props} />}
@@ -101,6 +106,7 @@ const MenuItemBuilder = ({
           setQuantity={setQuantity}
           increment={increment}
           decrement={decrement}
+          pointsIcon={hasPoints ? iconMap.Star : null}
         />
       </MenuItemBuilderFooterContainer>
     </MenuItemBuilderView>
@@ -116,6 +122,7 @@ MenuItemBuilder.propTypes = {
   allergenAlerts: propTypes.array,
   displaySettings: propTypes.object,
   cartId: propTypes.number,
+  hasPoints: propTypes.bool,
 }
 
 export default MenuItemBuilder

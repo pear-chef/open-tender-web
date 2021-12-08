@@ -2,7 +2,7 @@ import React from 'react'
 import propTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
 import styled from '@emotion/styled'
-import { BgImage, Box, ButtonLink } from '@open-tender/components'
+import { BgImage, Box, ButtonLink, Heading } from '@open-tender/components'
 import { makeLocalDateStr, formatDateStr } from '@open-tender/js'
 
 import { openModal } from '../slices'
@@ -12,7 +12,7 @@ import { Tag } from '.'
 const RewardView = styled(Box)`
   position: relative;
   height: 100%;
-  min-height: 11rem;
+  min-height: 13rem;
   display: flex;
   align-items: center;
   padding: 1.5rem;
@@ -31,7 +31,7 @@ const RewardTag = styled('div')`
 const RewardImage = styled(BgImage)`
   flex: 0 0 25%;
   height: 100%;
-  background-color: ${(props) => props.theme.bgColors.secondary};
+  background-color: ${(props) => props.theme.bgColors.tertiary};
 `
 
 const RewardDetails = styled('div')`
@@ -47,7 +47,9 @@ const RewardDetails = styled('div')`
   }
 `
 
-const RewardContent = styled('div')``
+const RewardContent = styled('div')`
+  padding: 0 1rem 0 0;
+`
 
 const RewardNote = styled('div')`
   display: flex;
@@ -67,14 +69,22 @@ const RewardNote = styled('div')`
     // color: ${(props) => props.theme.links.primary.color};
 `
 
-const RewardTitle = styled('p')`
-  color: ${(props) => props.theme.colors.primary};
+// const RewardTitle = styled('p')`
+//   color: ${(props) => props.theme.colors.primary};
+//   font-size: ${(props) => props.theme.fonts.sizes.small};
+//   // font-weight: ${(props) => props.theme.boldWeight};
+//   line-height: 1.25;
+// `
+
+const RewardTitle = styled(Heading)`
   font-size: ${(props) => props.theme.fonts.sizes.small};
+  line-height: 1.25;
 `
 
 const RewardDescription = styled('p')`
-  margin: 0.3rem 0 0;
+  margin: 0.5rem 0 0;
   font-size: ${(props) => props.theme.fonts.sizes.xSmall};
+  line-height: 1.2;
 `
 
 const RewardExpiration = styled('div')`
@@ -139,7 +149,7 @@ const makeOrderType = (orderType) => {
   }
 }
 
-const makeLimitations = (item) => {
+export const makeLimitations = (item) => {
   const { order_type, service_type } = item
   const serviceType = makeServiceType(service_type)
   const orderType = makeOrderType(order_type)
@@ -193,17 +203,10 @@ const Reward = ({ item }) => {
         <div>
           <RewardContent>
             <RewardNote>{reward.limitations}</RewardNote>
-            <RewardTitle>{reward.title}</RewardTitle>
-            {reward.description && (
-              <RewardDescription>{reward.description}</RewardDescription>
+            <RewardTitle as="p">{reward.title}</RewardTitle>
+            {reward.short_description && (
+              <RewardDescription>{reward.short_description}</RewardDescription>
             )}
-            {/* {reward.per_order === 1 && (
-              <RewardDescription>
-                <Text color="alert">
-                  Cannot be used with any other discounts
-                </Text>
-              </RewardDescription>
-            )} */}
           </RewardContent>
           <RewardExpiration>
             {reward.end_date === today ? (

@@ -1,6 +1,5 @@
 import React, { useContext, useEffect } from 'react'
 import { useHistory, Link } from 'react-router-dom'
-import { isBrowser } from 'react-device-detect'
 import { Helmet } from 'react-helmet'
 import { useSelector } from 'react-redux'
 import { selectToken } from '@open-tender/redux'
@@ -41,7 +40,7 @@ const NotFound = () => {
         </title>
       </Helmet>
       <Content>
-        <HeaderDefault title={isBrowser ? null : config.title} />
+        <HeaderDefault />
         <Main>
           <PageContainer>
             <PageTitle {...config} />

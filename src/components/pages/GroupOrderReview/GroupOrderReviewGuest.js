@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react'
-import { isBrowser } from 'react-device-detect'
 import { useSelector, useDispatch } from 'react-redux'
 import { useHistory, Link } from 'react-router-dom'
 import {
@@ -75,7 +74,6 @@ const GroupOrderReviewGuest = () => {
     <>
       <Content>
         <Header
-          title={isBrowser ? null : 'Join Group Order'}
           left={closed || error ? <StartOver /> : <Menu />}
           right={null}
         />

@@ -37,7 +37,6 @@ const AccountGroupOrders = () => {
   const dispatch = useDispatch()
   const orders = useSelector(selectCustomerGroupOrders)
   const { account } = useSelector(selectConfig)
-  const { title, subtitle, empty } = account.groupOrders
   const { entities: groupOrders, loading, error } = orders
   const hasOrders = groupOrders.length > 0 && !error
   const displayed = groupOrders.slice(0, 5)
@@ -51,11 +50,7 @@ const AccountGroupOrders = () => {
   if (!displayed.length || error) return null
 
   return (
-    <PageSection
-      title={title}
-      subtitle={subtitle}
-      to={isMore ? '/orders' : null}
-    >
+    <PageSection {...account.groupOrders} to={isMore ? '/orders' : null}>
       {isLoading ? (
         <PageContent style={{ margin: '0 auto' }}>
           <Loading text="Retrieving your recent orders..." />
@@ -68,13 +63,7 @@ const AccountGroupOrders = () => {
             </GroupOrder>
           ))}
         </GroupOrdersView>
-      ) : (
-        <PageContent style={{ margin: '0 auto' }}>
-          <div>
-            <p>{empty}</p>
-          </div>
-        </PageContent>
-      )}
+      ) : null}
     </PageSection>
   )
 }

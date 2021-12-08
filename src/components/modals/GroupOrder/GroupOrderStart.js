@@ -14,8 +14,9 @@ import GroupOrderSteps from './GroupOrderSteps'
 import { ModalContent } from '../../Modal'
 import styled from '@emotion/styled'
 
-const formatOrderTime = (s) =>
-  s.replace('Today', 'today').replace('Tomorrow', 'tomorrow')
+const formatOrderTime = (s) => {
+  return s ? s.replace('Today', 'today').replace('Tomorrow', 'tomorrow') : ''
+}
 
 const SpendingLimitForm = styled('form')`
   margin: 0;

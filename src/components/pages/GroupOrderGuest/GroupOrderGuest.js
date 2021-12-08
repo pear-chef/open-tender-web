@@ -132,6 +132,7 @@ const GroupOrderGuest = () => {
   const dispatch = useDispatch()
   const history = useHistory()
   const { token } = useParams()
+  const tokenLower = token ? token.toLowerCase() : null
   const { title: siteTitle } = useSelector(selectBrand)
   const groupOrder = useSelector(selectGroupOrder)
   const {
@@ -150,6 +151,7 @@ const GroupOrderGuest = () => {
     guestCount,
     token: currentToken,
   } = groupOrder
+  const currentTokenLower = currentToken ? currentToken.toLowerCase() : null
   const isLoading = loading === 'pending'
   const cartOwnerName = cartOwner
     ? `${cartOwner.first_name} ${cartOwner.last_name}`
@@ -196,18 +198,18 @@ const GroupOrderGuest = () => {
   useEffect(() => {
     if (isCartOwner) {
       history.push(`/menu/${slug}`)
-    } else if (cartGuestId && currentToken === token) {
+    } else if (cartGuestId && currentTokenLower === tokenLower) {
       if (slug) history.push(`/menu/${slug}`)
-    } else if (currentToken !== token) {
+    } else if (currentTokenLower !== tokenLower) {
       if (profile) dispatch(logoutCustomer())
       dispatch(resetGroupOrder())
-      dispatch(fetchGroupOrder(token))
+      dispatch(fetchGroupOrder(tokenLower))
     }
   }, [
     dispatch,
     history,
-    token,
-    currentToken,
+    tokenLower,
+    currentTokenLower,
     cartGuestId,
     slug,
     isCartOwner,

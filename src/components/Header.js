@@ -57,7 +57,7 @@ const HeaderTitle = styled('div')`
     -webkit-font-smoothing: ${(props) =>
       props.theme.fonts.headings.fontSmoothing};
     color: ${(props) => props.theme.fonts.headings.color};
-    font-size: ${(props) => props.theme.fonts.sizes.xBig};
+    font-size: ${(props) => props.theme.fonts.sizes.big};
   }
 `
 

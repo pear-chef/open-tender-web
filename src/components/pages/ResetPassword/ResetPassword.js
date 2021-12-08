@@ -1,7 +1,6 @@
 import React, { useEffect, useCallback, useContext } from 'react'
 import { useHistory, useLocation, Link } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import { isBrowser } from 'react-device-detect'
 import { Helmet } from 'react-helmet'
 import {
   selectCustomer,
@@ -70,7 +69,7 @@ const ResetPassword = () => {
         </title>
       </Helmet>
       <Content>
-        <HeaderDefault title={isBrowser ? null : config.title} />
+        <HeaderDefault />
         <Main>
           <PageContainer style={{ maxWidth: '76.8rem' }}>
             {success ? (

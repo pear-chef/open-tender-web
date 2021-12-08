@@ -11,7 +11,7 @@ import {
 import { ButtonStyled } from '@open-tender/components'
 
 import { maybeRefreshVersion } from '../../../app/version'
-import { openModal, selectAccountConfig, selectBrand } from '../../../slices'
+import { openModal, selectBrand, selectConfig } from '../../../slices'
 import { AppContext } from '../../../App'
 import {
   Content,
@@ -31,7 +31,7 @@ const AccountGiftCards = () => {
   const history = useHistory()
   const dispatch = useDispatch()
   const { title: siteTitle } = useSelector(selectBrand)
-  const config = useSelector(selectAccountConfig)
+  const { giftCardsAccount: config } = useSelector(selectConfig)
   const { entities, loading } = useSelector(selectCustomerGiftCards)
   const isLoading = loading === 'pending'
   const { auth } = useSelector(selectCustomer)
@@ -54,15 +54,15 @@ const AccountGiftCards = () => {
     <>
       <Helmet>
         <title>
-          {config.giftCards.title} | {siteTitle}
+          {config.title} | {siteTitle}
         </title>
       </Helmet>
       <Content>
-        <HeaderUser title={isBrowser ? null : 'Gift Cards'} />
+        <HeaderUser />
         <Main>
           {!isBrowser && <AccountTabs />}
           <PageContainer style={{ maxWidth: '76.8rem' }}>
-            <PageTitle {...config.giftCards} preface={<AccountBack />}>
+            <PageTitle {...config} preface={<AccountBack />}>
               <PageTitleButtons>
                 <ButtonStyled onClick={() => history.push('/gift-cards')}>
                   Buy Gift Cards For Others
@@ -95,7 +95,7 @@ const AccountGiftCards = () => {
                 {isLoading ? (
                   <Loading text="Retrieving your gift cards..." />
                 ) : (
-                  <p>{config.giftCards.empty}</p>
+                  <p>Looks like you haven't added any gift cards yet.</p>
                 )}
               </PageContent>
             )}

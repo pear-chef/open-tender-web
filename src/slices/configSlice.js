@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { capitalize } from '@open-tender/js'
 import { OpenTenderAPI } from '@open-tender/redux'
+import { isBrowser } from 'react-device-detect'
 
 const baseUrl = process.env.REACT_APP_API_URL
 const authUrl = process.env.REACT_APP_AUTH_URL
@@ -69,17 +70,14 @@ const configSlice = createSlice({
   },
 })
 
-export const {
-  resetConfig,
-  resetRetries,
-  incrementRetries,
-} = configSlice.actions
+export const { resetConfig, resetRetries, incrementRetries } =
+  configSlice.actions
 
 export const selectBrand = (state) => state.config.brand
 export const selectTheme = (state) => state.config.theme
 export const selectConfig = (state) => state.config.content
 export const selectSettings = (state) => state.config.settings
-export const selectAPI = (state) => state.config.api
+export const selectApi = (state) => state.config.api
 
 export const selectAccountConfig = (state) => state.config.content.account
 export const selectOutpostName = (state) =>
@@ -97,5 +95,12 @@ export const selectOptIns = (state) => {
 }
 export const selectFulfillment = (state) => state.config.brand.fulfillment
 export const selectRecaptcha = (state) => state.config.settings.recaptcha
+
+export const selectHeaderHeight = (state) => {
+  if (!state.config.theme) return 0
+  const { navHeight, navHeightMobile } = state.config.theme.layout
+  const height = isBrowser ? navHeight : navHeightMobile
+  return parseInt(height.replace('rem', '')) * 10
+}
 
 export default configSlice.reducer

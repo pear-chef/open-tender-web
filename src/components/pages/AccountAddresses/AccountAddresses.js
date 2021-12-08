@@ -29,7 +29,7 @@ const AccountAddresses = () => {
   const history = useHistory()
   const dispatch = useDispatch()
   const { title: siteTitle } = useSelector(selectBrand)
-  const config = useSelector(selectConfig)
+  const { addresses: config } = useSelector(selectConfig)
   const { auth } = useSelector(selectCustomer)
   const { entities, loading } = useSelector(selectCustomerAddresses)
   const isLoading = loading === 'pending'
@@ -53,15 +53,15 @@ const AccountAddresses = () => {
     <>
       <Helmet>
         <title>
-          {config.addresses.title} | {siteTitle}
+          {config.title} | {siteTitle}
         </title>
       </Helmet>
       <Content>
-        <HeaderUser title={isBrowser ? null : config.account.addresses.title} />
+        <HeaderUser />
         <Main>
           {!isBrowser && <AccountTabs />}
           <PageContainer style={{ maxWidth: '76.8rem' }}>
-            <PageTitle {...config.addresses} preface={<AccountBack />} />
+            <PageTitle {...config} preface={<AccountBack />} />
             {entities.length ? (
               <>
                 <Addresses addresses={entities} isLoading={isLoading} />

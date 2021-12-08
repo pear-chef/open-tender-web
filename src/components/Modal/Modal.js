@@ -22,9 +22,11 @@ import {
   GroupOrder,
   LevelUp,
   Login,
+  LoyaltyTier,
   MenuItem,
   OrderRating,
   OrderType,
+  Points,
   QRCode,
   RequestedAt,
   Reward,
@@ -64,10 +66,14 @@ const makeModal = (type, windowRef, args = {}) => {
       return <LevelUp windowRef={windowRef} {...args} />
     case 'login':
       return <Login {...args} />
+    case 'loyaltyTier':
+      return <LoyaltyTier {...args} />
     case 'orderType':
       return <OrderType {...args} />
     case 'qrCode':
       return <QRCode {...args} />
+    case 'points':
+      return <Points {...args} />
     case 'rating':
       return <OrderRating {...args} />
     case 'requestedAt':
@@ -86,13 +92,14 @@ const makeModal = (type, windowRef, args = {}) => {
 const containerStyleMap = {
   address: { alignItems: 'flex-start' },
   creditCard: { alignItems: 'flex-start' },
-  requestedAt: { alignItems: 'flex-start' },
-  allergens: { alignItems: 'flex-start' },
+  // requestedAt: { alignItems: 'flex-start' },
+  // allergens: { alignItems: 'flex-start' },
   cartErrors: { alignItems: 'flex-start' },
   cartCounts: { alignItems: 'flex-start' },
-  groupOrder: { alignItems: 'flex-start' },
+  // groupOrder: { alignItems: 'flex-start' },
   signUp: { alignItems: 'flex-start' },
-  reward: { alignItems: 'flex-start' },
+  // reward: { alignItems: 'flex-start' },
+  // loyaltyTier: { alignItems: 'flex-start' },
 }
 
 const ModalContainer = styled('div')`

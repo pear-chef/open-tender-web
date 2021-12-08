@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { isBrowser } from 'react-device-detect'
 import { Helmet } from 'react-helmet'
+import { useTheme } from '@emotion/react'
 import {
   selectCustomer,
   fetchCustomer,
@@ -31,15 +32,7 @@ import AccountOrders from './AccountOrders'
 import AccountLoyalty from './AccountLoyalty'
 import AccountGroupOrders from './AccountGroupOrders'
 import AccountDeals from './AccountDeals'
-import { useTheme } from '@emotion/react'
-
-// const AccountLinks = () => (
-//   <p>
-//     <Link to="/gift-cards">Purchase gift cards</Link> |{' '}
-//     <Link to="/donations">make a donation</Link>
-//     {/* <Link to="/contact">get in touch</Link> */}
-//   </p>
-// )
+import AccountRewards from './AccountRewards'
 
 const Account = () => {
   const history = useHistory()
@@ -103,9 +96,7 @@ const Account = () => {
               title={pageTitle}
               // subtitle={subtitle}
               actions={<AccountActions />}
-            >
-              {/* <AccountLinks /> */}
-            </Greeting>
+            />
           </PageHero>
           <PageContainer
             style={
@@ -114,7 +105,8 @@ const Account = () => {
                 : { marginTop: `-${navHeightMobile}` }
             }
           >
-            <AccountLoyalty />
+            <AccountLoyalty showTitle={false} />
+            <AccountRewards />
             <AccountGroupOrders />
             <AccountOrders />
             <AccountDeals />

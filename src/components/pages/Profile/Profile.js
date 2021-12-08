@@ -12,7 +12,7 @@ import { FormWrapper, ProfileForm } from '@open-tender/components'
 import { Helmet } from 'react-helmet'
 
 import { maybeRefreshVersion } from '../../../app/version'
-import { selectAccountConfig, selectBrand, selectOptIns } from '../../../slices'
+import { selectBrand, selectConfig, selectOptIns } from '../../../slices'
 import { AppContext } from '../../../App'
 import {
   AccountBack,
@@ -31,14 +31,15 @@ const AccountProfile = () => {
   const dispatch = useDispatch()
   const history = useHistory()
   const { title: siteTitle } = useSelector(selectBrand)
-  const account = useSelector(selectAccountConfig)
+  const { profile: config } = useSelector(selectConfig)
   const { profile, loading, error } = useSelector(selectCustomer)
   const { customer_id } = profile || {}
   const isLoading = loading === 'pending'
   const errMsg = error ? error.message || null : null
-  const update = useCallback((data) => dispatch(updateCustomer(data)), [
-    dispatch,
-  ])
+  const update = useCallback(
+    (data) => dispatch(updateCustomer(data)),
+    [dispatch]
+  )
   const optIns = useSelector(selectOptIns)
   const { windowRef } = useContext(AppContext)
 
@@ -61,15 +62,15 @@ const AccountProfile = () => {
     <>
       <Helmet>
         <title>
-          {account.profile.title} | {siteTitle}
+          {config.title} | {siteTitle}
         </title>
       </Helmet>
       <Content>
-        <HeaderUser title={isBrowser ? null : account.profile.title} />
+        <HeaderUser />
         <Main>
           {!isBrowser && <AccountTabs />}
           <PageContainer style={{ maxWidth: '72rem' }}>
-            <PageTitle {...account.profile} preface={<AccountBack />}>
+            <PageTitle {...config} preface={<AccountBack />}>
               <VerifyAccount style={{ margin: '2rem 0 0' }} />
             </PageTitle>
             {profile ? (

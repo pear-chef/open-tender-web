@@ -57,11 +57,7 @@ const GroupOrders = () => {
         <title>Order History | {siteTitle}</title>
       </Helmet>
       <Content>
-        <HeaderUser
-          title={isBrowser ? null : 'Group Orders'}
-          bgColor="secondary"
-          borderColor="secondary"
-        />
+        <HeaderUser />
         <Main bgColor="secondary">
           {!isBrowser && <AccountTabs />}
           <Container>

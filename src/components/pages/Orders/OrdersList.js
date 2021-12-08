@@ -6,6 +6,7 @@ import { OrderCard, OrderCardGroup } from '../..'
 const OrdersListView = styled('div')`
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   margin: 1rem -1rem;
   opacity: 0;
   animation: slide-up 0.25s ease-in-out 0.25s forwards;

@@ -1,7 +1,6 @@
 import React, { useEffect, useCallback, useContext } from 'react'
 import { useHistory, useLocation, Link } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import { isBrowser } from 'react-device-detect'
 import { Helmet } from 'react-helmet'
 import {
   selectCustomer,
@@ -15,7 +14,7 @@ import { ButtonLink, FormWrapper, SignUpForm } from '@open-tender/components'
 import { maybeRefreshVersion } from '../../../app/version'
 import {
   openModal,
-  selectAPI,
+  selectApi,
   selectBrand,
   selectConfig,
   selectOptIns,
@@ -60,7 +59,7 @@ const SignUp = () => {
   const history = useHistory()
   const dispatch = useDispatch()
   const posToken = useQuery().get('pos-token')
-  const api = useSelector(selectAPI)
+  const api = useSelector(selectApi)
   const { signUp: signupConfig } = useSelector(selectConfig)
   const { title: siteTitle, has_thanx } = useSelector(selectBrand)
   const { auth } = useSelector(selectCustomer)
@@ -106,7 +105,7 @@ const SignUp = () => {
         </title>
       </Helmet>
       <Content>
-        <HeaderDefault title={isBrowser ? null : signupConfig.title} />
+        <HeaderDefault />
         <Main>
           <PageContainer style={{ maxWidth: '76.8rem' }}>
             <PageTitle {...signupConfig}>

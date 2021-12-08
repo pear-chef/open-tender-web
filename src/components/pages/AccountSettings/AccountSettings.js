@@ -6,7 +6,7 @@ import { selectCustomer, logoutCustomer } from '@open-tender/redux'
 import { ButtonLink } from '@open-tender/components'
 
 import { maybeRefreshVersion } from '../../../app/version'
-import { selectBrand } from '../../../slices'
+import { selectBrand, selectConfig } from '../../../slices'
 import { AppContext } from '../../../App'
 import {
   Content,
@@ -24,6 +24,7 @@ const AccountSettings = () => {
   const history = useHistory()
   const dispatch = useDispatch()
   const { title: siteTitle } = useSelector(selectBrand)
+  const { accountSettings: config } = useSelector(selectConfig)
   const { auth, profile } = useSelector(selectCustomer)
   const { windowRef } = useContext(AppContext)
 
@@ -39,17 +40,16 @@ const AccountSettings = () => {
   return profile ? (
     <>
       <Helmet>
-        <title>Account Settings | {siteTitle}</title>
+        <title>
+          {config.title} | {siteTitle}
+        </title>
       </Helmet>
       <Content>
-        <HeaderUser title={isBrowser ? null : 'Account'} />
+        <HeaderUser />
         <Main>
           {!isBrowser && <AccountTabs />}
           <PageContainer style={{ maxWidth: '76.8rem' }}>
-            <PageTitle
-              title="Account"
-              subtitle="Manage saved credit cards, addresses, etc."
-            >
+            <PageTitle {...config}>
               <div style={{ margin: '1rem 0 2rem' }}>
                 <p>
                   <ButtonLink onClick={() => dispatch(logoutCustomer())}>

@@ -272,9 +272,9 @@ const makeGlobalStyles = (theme) => css`
 
     &:active,
     &:focus {
-      color: ${theme.inputs.color};
-      background-color: ${theme.inputs.bgColor};
-      border: ${theme.inputs.borderWidth} solid ${theme.colors.borderColor};
+      color: ${theme.inputs.colorFocus};
+      background-color: ${theme.inputs.bgColorFocus};
+      border: ${theme.inputs.borderWidth} solid ${theme.colors.borderColorFocus};
     }
 
     &:disabled,

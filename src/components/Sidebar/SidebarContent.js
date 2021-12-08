@@ -198,13 +198,18 @@ const Sidebar = React.forwardRef((props, ref) => {
           <SidebarButtons>
             <SidebarBack>
               {isCheckout && cartId ? (
-                <ButtonStyled onClick={handleReopen} size="big">
+                <ButtonStyled
+                  onClick={handleReopen}
+                  size="big"
+                  color="secondary"
+                >
                   Reopen
                 </ButtonStyled>
               ) : (
                 <ButtonStyled
                   onClick={handleBack}
                   size="big"
+                  color="secondary"
                   disabled={!canOrder}
                   label={
                     !notEmpty
@@ -221,7 +226,7 @@ const Sidebar = React.forwardRef((props, ref) => {
                 <ButtonStyled
                   onClick={handleReview}
                   size="big"
-                  color="cart"
+                  color="primary"
                   disabled={!canCheckout}
                 >
                   {isReview
@@ -234,7 +239,7 @@ const Sidebar = React.forwardRef((props, ref) => {
                 <ButtonStyled
                   onClick={handleCheckout}
                   size="big"
-                  color="cart"
+                  color="primary"
                   disabled={!canCheckout}
                 >
                   {isCheckout ? 'Close' : 'Checkout'}
