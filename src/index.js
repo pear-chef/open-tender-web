@@ -33,6 +33,7 @@ Sentry.init({
     'Could not load "util".',
     "Either header 'client-id' or 'origin' is required",
     'Object Not Found Matching',
+    'Return statements are only valid inside functions',
   ],
 })
 
