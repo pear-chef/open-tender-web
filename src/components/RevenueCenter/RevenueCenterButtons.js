@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import propTypes from 'prop-types'
 import { useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
@@ -10,6 +10,7 @@ import {
 } from '@open-tender/redux'
 import { ButtonStyled } from '@open-tender/components'
 
+import { openModal } from '../../slices'
 import iconMap from '../iconMap'
 import { makeServiceTypesToday } from './RevenueCenterOrder'
 
@@ -67,10 +68,20 @@ export const RevenueCenterButtons = ({ revenueCenter, isLanding }) => {
 
   const handleDelivery = () => {
     dispatch(setOrderServiceType(rcType, 'DELIVERY', isOutpost))
-    dispatch(setAddress(address))
-    dispatch(setRevenueCenter(revenueCenter))
-    history.push(menuSlug)
+    if (isOutpost || slug !== 'ghost-kitchen') {
+      dispatch(setAddress(address))
+      dispatch(setRevenueCenter(revenueCenter))
+      history.push(menuSlug)
+    } else {
+      dispatch(setAddress(null))
+      dispatch(setRevenueCenter(revenueCenter))
+      dispatch(openModal({ type: 'mapsAutocomplete' }))
+    }
   }
+
+  useEffect(() => {
+    dispatch(setAddress(null))
+  }, [dispatch])
 
   return (
     <>

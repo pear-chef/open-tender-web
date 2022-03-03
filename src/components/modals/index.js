@@ -13,6 +13,7 @@ import GroupOrder from './GroupOrder'
 import LevelUp from './LevelUp'
 import Login from './Login'
 import LoyaltyTier from './LoyaltyTier'
+import MapsAutocomplete from './MapsAutocomplete'
 import MenuItem from './MenuItem'
 import OrderRating from './OrderRating'
 import OrderType from './OrderType'
@@ -39,6 +40,7 @@ export {
   LevelUp,
   Login,
   LoyaltyTier,
+  MapsAutocomplete,
   MenuItem,
   OrderRating,
   OrderType,

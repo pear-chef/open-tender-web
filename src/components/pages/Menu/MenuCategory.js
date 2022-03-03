@@ -1,8 +1,10 @@
 import React from 'react'
 import propTypes from 'prop-types'
-import MenuItem from './MenuItem'
+import { useSelector } from 'react-redux'
 import styled from '@emotion/styled'
+import { selectSoldOut } from '@open-tender/redux'
 import { Container } from '../..'
+import MenuItem from './MenuItem'
 
 export const MenuCategoryView = styled('div')`
   opacity: 0;
@@ -41,6 +43,8 @@ const MenuItems = styled('div')`
 `
 
 const MenuCategory = ({ category, isChild }) => {
+  const soldOut = useSelector(selectSoldOut)
+  const items = category.items.filter((i) => !soldOut.includes(i.id))
   return (
     <MenuCategoryView isChild={isChild}>
       <MenuCategoryHeader>
@@ -50,7 +54,7 @@ const MenuCategory = ({ category, isChild }) => {
         </Container>
       </MenuCategoryHeader>
       <MenuItems>
-        {category.items.map((item) => (
+        {items.map((item) => (
           <MenuItem key={item.id} item={item} />
         ))}
       </MenuItems>

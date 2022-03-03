@@ -23,6 +23,7 @@ import {
   LevelUp,
   Login,
   LoyaltyTier,
+  MapsAutocomplete,
   MenuItem,
   OrderRating,
   OrderType,
@@ -62,6 +63,8 @@ const makeModal = (type, windowRef, args = {}) => {
       return <GroupOrder {...args} />
     case 'item':
       return <MenuItem {...args} />
+    case 'mapsAutocomplete':
+      return <MapsAutocomplete {...args} />
     case 'levelup':
       return <LevelUp windowRef={windowRef} {...args} />
     case 'login':
