@@ -118,11 +118,10 @@ const Guest = () => {
             <PageContainer style={{ marginTop: '0' }}>
               {has_deals && <DealsSection />}
               {hasContent && (
-                <GuestContent hasDeals={has_deals}>
-                  {content.map((i, index) => (
-                    <p key={index}>{i}</p>
-                  ))}
-                </GuestContent>
+                <GuestContent
+                  hasDeals={has_deals}
+                  dangerouslySetInnerHTML={{ __html: content }}
+                />
               )}
             </PageContainer>
           )}
