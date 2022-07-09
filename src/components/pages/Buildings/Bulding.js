@@ -114,15 +114,8 @@ const BuildingFooter = styled('div')`
 const Building = ({ revenueCenter }) => {
   const history = useHistory()
   const theme = useSelector(selectTheme)
-  const {
-    name,
-    slug,
-    address,
-    images,
-    hours,
-    is_outpost,
-    status,
-  } = revenueCenter
+  const { name, slug, address, images, hours, is_outpost, status } =
+    revenueCenter
   const smallImg = images.find((i) => i.type === 'SMALL_IMAGE')
   const largeImg = images.find((i) => i.type === 'SMALL_IMAGE')
   const imageUrl = smallImg.url || largeImg.url

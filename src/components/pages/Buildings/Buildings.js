@@ -1,6 +1,5 @@
 import { useContext, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-// import { TransitionGroup, CSSTransition } from 'react-transition-group'
 import styled from '@emotion/styled'
 import Helmet from 'react-helmet'
 import { isBrowser } from 'react-device-detect'
@@ -10,7 +9,7 @@ import {
   selectCustomer,
   selectOrder,
 } from '@open-tender/redux'
-import { useGeolocation, ButtonStyled } from '@open-tender/components'
+import { useGeolocation } from '@open-tender/components'
 
 import { maybeRefreshVersion } from '../../../app/version'
 import {
@@ -107,18 +106,18 @@ const BuildingsHeroHeader = styled('div')`
   }
 `
 
-const BuildingsButton = styled(BuildingsHeroHeader)`
-  margin: 0;
+// const BuildingsButton = styled(BuildingsHeroHeader)`
+//   margin: 0;
 
-  p {
-    margin: 3.5rem 0 2rem;
-  }
+//   p {
+//     margin: 3.5rem 0 2rem;
+//   }
 
-  button {
-    width: 100%;
-    max-width: 36rem;
-  }
-`
+//   button {
+//     width: 100%;
+//     max-width: 36rem;
+//   }
+// `
 
 const checkMatch = (value, revenueCenter) => {
   if (!revenueCenter) return false
@@ -200,7 +199,7 @@ const Buildings = () => {
 
   const callback = () => history.push('/')
 
-  const goGhost = () => history.push('/locations/ghost-kitchen')
+  // const goGhost = () => history.push('/locations/ghost-kitchen')
 
   return (
     <>
@@ -233,12 +232,12 @@ const Buildings = () => {
                 <p>{subtitle}</p>
               </BuildingsHeroHeader>
               <BuildingsInput value={value} setValue={setValue} />
-              <BuildingsButton>
+              {/* <BuildingsButton>
                 <p>Don't live in a Pear Chef building?</p>
                 <ButtonStyled onClick={goGhost} color="primary" size="big">
                   Order Here
                 </ButtonStyled>
-              </BuildingsButton>
+              </BuildingsButton> */}
             </BuildingsHeroContent>
           </BuildingsHero>
           <PageContainer style={{ maxWidth: '140rem', minHeight: '136rem' }}>
