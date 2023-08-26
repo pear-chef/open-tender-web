@@ -142,7 +142,7 @@ const LoyaltyProgramPoints = styled('div')`
 // }
 
 const makeStatus = (tiers, status, points) => {
-  if (!tiers) return null
+  if (!tiers || !tiers.length) return null
   const highest = tiers[tiers.length - 1].threshold
   const total = highest * 1.2
   const progress = Math.min((status.progress / total) * 100, 100)
